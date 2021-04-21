@@ -104,9 +104,7 @@ public class GameScreen extends BaseScreen {
         Texture wallTexture = game.getManager().get("wall_1.png");
         Texture floorTexture = game.getManager().get("floor_1.png");
         Texture slimeTexture = game.getManager().get("slime_idle_anim_f0.png");
-        Texture stairsTexture = game.getManager().get("slime_idle_anim_f0.png");
-
-
+        Texture stairsTexture = game.getManager().get("stair_nextlevel.png");
 
 
         for(int i=0; i<mapa.size(); i++){
@@ -264,134 +262,67 @@ public class GameScreen extends BaseScreen {
         for(int i = 0; i<(habitaciones.size()-1);i++){
             int[] centro1 = {(habitaciones.get(i).getX()+habitaciones.get(i).getW()/2), (habitaciones.get(i).getY()+habitaciones.get(i).getH()/2)};
             int[] centro2 = {(habitaciones.get((i+1)).getX()+habitaciones.get((i+1)).getW()/2), (habitaciones.get((i+1)).getY()+habitaciones.get((i+1)).getH()/2)};
-            int tray = (int) (Math.random()*(1));
             for(int j=0; j<mapa.size(); j++){
                 for(int k=0; k<mapa.size(); k++){
-                    if(tray==1){
-                        if (centro2[1]>centro1[1]){
-                            if (k==centro1[0] && (j>=centro1[1] && j<=centro2[1])){
-                                mapa.get(j).set(k,1);
-                                if((int) mapa.get(j).get(k+1) != 1){
-                                    mapa.get(j).set((k+1), 2);
-                                }
-                                if((int) mapa.get(j).get(k-1) != 1){
-                                    mapa.get(j).set((k-1), 2);
-                                }
+                    if(centro2[1]>centro1[1]){
+                        if (k==centro1[0] && (j>=centro1[1] && j<=centro2[1])){
+                            mapa.get(j).set(k,1);
+                            if((int) mapa.get(j).get(k+1) != 1 && (int) mapa.get(j).get(k+1) != 3 && (int) mapa.get(j).get(k+1) != 4){
+                                mapa.get(j).set((k+1), 2);
                             }
-                            if (centro2[0]>centro1[0]){
-                                if (j==centro2[0] && (k>=centro1[0] && k<=centro2[0])){
-                                    mapa.get(j).set(k,1);
-                                    if((int) mapa.get(j+1).get(k) != 1){
-                                        mapa.get(j+1).set(k, 2);
-                                    }
-                                    if((int) mapa.get(j-1).get(k) != 1){
-                                        mapa.get(j-1).set(k, 2);
-                                    }
+                            if((int) mapa.get(j).get(k-1) != 1 && (int) mapa.get(j).get(k-1) != 3 && (int) mapa.get(j).get(k-1) != 4){
+                                mapa.get(j).set((k-1), 2);
+                            }
+                        }
+                        if (centro2[0]>centro1[0]){
+                            if (j==centro2[1] && (k>=centro1[0] && k<=centro2[0])){
+                                mapa.get(j).set(k,1);
+                                if((int) mapa.get(j+1).get(k) != 1 && (int) mapa.get(j+1).get(k) != 3 && (int) mapa.get(j+1).get(k) != 4){
+                                    mapa.get(j+1).set(k, 2);
                                 }
-                            } else {
-                                if (j==centro2[0] && (k<=centro1[0] && k>=centro2[0])){
-                                    mapa.get(j).set(k,1);
-                                    if((int) mapa.get(j+1).get(k) != 1){
-                                        mapa.get(j+1).set(k, 2);
-                                    }
-                                    if((int) mapa.get(j-1).get(k) != 1){
-                                        mapa.get(j-1).set(k, 2);
-                                    }
+                                if((int) mapa.get(j-1).get(k) != 1 && (int) mapa.get(j-1).get(k) != 3 && (int) mapa.get(j-1).get(k) != 4){
+                                    mapa.get(j-1).set(k, 2);
                                 }
                             }
                         } else {
-                            if (k==centro1[0] && (j<=centro1[1] && j>=centro2[1])){
+                            if (j==centro2[1] && (k<=centro1[0] && k>=centro2[0])){
                                 mapa.get(j).set(k,1);
-                                if((int) mapa.get(j).get(k+1) != 1){
-                                    mapa.get(j).set((k+1), 2);
+                                if((int) mapa.get(j+1).get(k) != 1 && (int) mapa.get(j+1).get(k) != 3 && (int) mapa.get(j+1).get(k) != 4){
+                                    mapa.get(j+1).set(k, 2);
                                 }
-                                if((int) mapa.get(j).get(k-1) != 1){
-                                    mapa.get(j).set((k-1), 2);
-                                }
-                            }
-                            if (centro2[0]>centro1[0]){
-                                if (j==centro2[0] && (k>=centro1[0] && k<=centro2[0])){
-                                    mapa.get(j).set(k,1);
-                                    if((int) mapa.get(j+1).get(k) != 1){
-                                        mapa.get(j+1).set(k, 2);
-                                    }
-                                    if((int) mapa.get(j-1).get(k) != 1){
-                                        mapa.get(j-1).set(k, 2);
-                                    }
-                                }
-                            } else {
-                                if (j==centro2[0] && (k<=centro1[0] && k>=centro2[0])){
-                                    mapa.get(j).set(k,1);
-                                    if((int) mapa.get(j+1).get(k) != 1){
-                                        mapa.get(j+1).set(k, 2);
-                                    }
-                                    if((int) mapa.get(j-1).get(k) != 1){
-                                        mapa.get(j-1).set(k, 2);
-                                    }
+                                if((int) mapa.get(j-1).get(k) != 1 && (int) mapa.get(j-1).get(k) != 3 && (int) mapa.get(j-1).get(k) != 4){
+                                    mapa.get(j-1).set(k, 2);
                                 }
                             }
                         }
-                    } else{
+                    } else {
+                        if (k==centro1[0] && (j<=centro1[1] && j>=centro2[1])){
+                            mapa.get(j).set(k,1);
+                            if((int) mapa.get(j).get(k+1) != 1 && (int) mapa.get(j).get(k+1) != 3 && (int) mapa.get(j).get(k+1) != 4){
+                                mapa.get(j).set((k+1), 2);
+                            }
+                            if((int) mapa.get(j).get(k-1) != 1 && (int) mapa.get(j).get(k-1) != 3 && (int) mapa.get(j).get(k-1) != 4){
+                                mapa.get(j).set((k-1), 2);
+                            }
+                        }
                         if (centro2[0]>centro1[0]){
-                            if (j==centro2[0] && (k>=centro1[0] && k<=centro2[0])){
+                            if (j==centro2[1] && (k>=centro1[0] && k<=centro2[0])){
                                 mapa.get(j).set(k,1);
-                                if((int) mapa.get(j+1).get(k) != 1){
+                                if((int) mapa.get(j+1).get(k) != 1 && (int) mapa.get(j).get(k+1) != 3 && (int) mapa.get(j).get(k+1) != 4){
                                     mapa.get(j+1).set(k, 2);
                                 }
-                                if((int) mapa.get(j-1).get(k) != 1){
+                                if((int) mapa.get(j-1).get(k) != 1 && (int) mapa.get(j-1).get(k) != 3 && (int) mapa.get(j-1).get(k) != 4){
                                     mapa.get(j-1).set(k, 2);
                                 }
                             }
-                            if (centro2[1]>centro1[1]) {
-                                if (k == centro1[0] && (j >= centro1[1] && j <= centro2[1])) {
-                                    mapa.get(j).set(k, 1);
-                                    if ((int) mapa.get(j).get(k + 1) != 1) {
-                                        mapa.get(j).set((k + 1), 2);
-                                    }
-                                    if ((int) mapa.get(j).get(k - 1) != 1) {
-                                        mapa.get(j).set((k - 1), 2);
-                                    }
-                                }
-                            } else{
-                                if (k==centro1[0] && (j<=centro1[1] && j>=centro2[1])){
-                                    mapa.get(j).set(k,1);
-                                    if((int) mapa.get(j).get(k+1) != 1){
-                                        mapa.get(j).set((k+1), 2);
-                                    }
-                                    if((int) mapa.get(j).get(k-1) != 1){
-                                        mapa.get(j).set((k-1), 2);
-                                    }
-                                }
-                            }
-                        } else{
-                            if (j==centro2[0] && (k<=centro1[0] && k>=centro2[0])){
+                        } else {
+                            if (j==centro2[1] && (k<=centro1[0] && k>=centro2[0])){
                                 mapa.get(j).set(k,1);
-                                if((int) mapa.get(j+1).get(k) != 1){
+                                if((int) mapa.get(j+1).get(k) != 1 && (int) mapa.get(j+1).get(k) != 3 && (int) mapa.get(j+1).get(k) != 4){
                                     mapa.get(j+1).set(k, 2);
                                 }
-                                if((int) mapa.get(j-1).get(k) != 1){
+                                if((int) mapa.get(j-1).get(k) != 1 && (int) mapa.get(j-1).get(k) != 3 && (int) mapa.get(j-1).get(k) != 4){
                                     mapa.get(j-1).set(k, 2);
-                                }
-                            }
-                            if (centro2[1]>centro1[1]) {
-                                if (k == centro1[0] && (j >= centro1[1] && j <= centro2[1])) {
-                                    mapa.get(j).set(k, 1);
-                                    if ((int) mapa.get(j).get(k + 1) != 1) {
-                                        mapa.get(j).set((k + 1), 2);
-                                    }
-                                    if ((int) mapa.get(j).get(k - 1) != 1) {
-                                        mapa.get(j).set((k - 1), 2);
-                                    }
-                                }
-                            } else{
-                                if (k==centro1[0] && (j<=centro1[1] && j>=centro2[1])){
-                                    mapa.get(j).set(k,1);
-                                    if((int) mapa.get(j).get(k+1) != 1){
-                                        mapa.get(j).set((k+1), 2);
-                                    }
-                                    if((int) mapa.get(j).get(k-1) != 1){
-                                        mapa.get(j).set((k-1), 2);
-                                    }
                                 }
                             }
                         }

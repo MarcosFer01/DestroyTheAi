@@ -59,7 +59,7 @@ public class PersonajeEntidad extends Actor {
 
         BodyDef def = new BodyDef();
         def.position.set(position);
-        def.type = BodyDef.BodyType.DynamicBody;
+        def.type = BodyDef.BodyType.KinematicBody;
         body = world.createBody(def);
 
         PolygonShape box = new PolygonShape();
@@ -116,19 +116,19 @@ public class PersonajeEntidad extends Actor {
     public void moverse(int dir) {
         switch(dir){
             case 0:{
-                body.setLinearVelocity(0,4);
+                body.setLinearVelocity(0,8);
                 break;
             }
             case 1:{
-                body.setLinearVelocity(4,0);
+                body.setLinearVelocity(8,0);
                 break;
             }
             case 2:{
-                body.setLinearVelocity(0,-4);
+                body.setLinearVelocity(0,-8);
                 break;
             }
             case 3:{
-                body.setLinearVelocity(-4,0);
+                body.setLinearVelocity(-8,0);
                 break;
             }
         }
