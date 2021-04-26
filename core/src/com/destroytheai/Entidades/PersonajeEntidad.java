@@ -12,6 +12,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.destroytheai.Constantes;
 import com.destroytheai.Mecanicas.Controler;
+import com.destroytheai.Mecanicas.HUD;
 import com.destroytheai.Mecanicas.SimpleDirectionGestureDetector;
 
 import static com.destroytheai.Constantes.PIXELS_IN_METERS;
@@ -22,7 +23,9 @@ public class PersonajeEntidad extends Actor {
     private World world;
     private Body body;
     private Fixture fixture;
-    private int vida = 10;
+    private int vida;
+    private int vidaMax;
+    private int oro;
     private boolean movimiento = true;
     private boolean colision = false;
     private boolean vivo = true;
@@ -52,6 +55,18 @@ public class PersonajeEntidad extends Actor {
     public void setColision(boolean colision) {
         this.colision = colision;
     }
+    public int getVidaMax() {
+        return vidaMax;
+    }
+    public void setVidaMax(int vidaMax) {
+        this.vidaMax = vidaMax;
+    }
+    public int getOro() {
+        return oro;
+    }
+    public void setOro(int oro) {
+        this.oro = oro;
+    }
 
     public PersonajeEntidad(World world, Texture texture, Vector2 position){
         this.world=world;
@@ -69,7 +84,6 @@ public class PersonajeEntidad extends Actor {
         box.dispose();
 
         setSize(PIXELS_IN_METERS, PIXELS_IN_METERS);
-
     }
 
     @Override

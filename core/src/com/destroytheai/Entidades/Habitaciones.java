@@ -7,6 +7,7 @@ public class Habitaciones {
     private int h;
     private boolean spawner;
     private boolean fin;
+    private int numEn;
 
     public Habitaciones(int x, int y, int w, int h){
         this.x=x;
@@ -14,9 +15,6 @@ public class Habitaciones {
         this.w=w;
         this.h=h;
     }
-    public Habitaciones(){
-    }
-
 
     public boolean colisionan(Habitaciones h1, Habitaciones h2){
         if((h2.getX()>=h1.getX() && h2.getX()<=h1.getX()+h1.getW()) && (h2.getY()>=h1.getY() && h2.getY()<h1.getY()+h1.getH())){
@@ -61,5 +59,11 @@ public class Habitaciones {
     }
     public void setFin(boolean fin) {
         this.fin = fin;
+    }
+    public int getNumEn() {
+        return numEn;
+    }
+    public void setNumEn(int numEn) {
+        this.numEn = numEn;
     }
 }

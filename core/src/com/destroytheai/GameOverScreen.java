@@ -23,7 +23,7 @@ public class GameOverScreen extends BaseScreen{
 
         stage = new Stage(new FitViewport(640, 360));
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
-        gameover = new Image(game.getManager().get("gameover.png", Texture.class));
+        gameover = new Image(new Texture("gameover.png"));
         menu = new TextButton("Menu principal", skin);
 
         menu.addCaptureListener(new ChangeListener() {

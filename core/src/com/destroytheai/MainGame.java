@@ -12,6 +12,9 @@ public class MainGame extends Game {
 	public GameOverScreen gameOverScreen;
 	public MenuScreen menuScreen;
 	public LoadingScreen loadingScreen;
+	public PersonajesScreen personajesScreen;
+	public OpcionesScreen opcionesScreen;
+	public EstadisticasScreen estadisticasScreen;
 
 	public AssetManager getManager() {
 		return manager;
@@ -29,13 +32,15 @@ public class MainGame extends Game {
 
 		loadingScreen = new LoadingScreen(this);
 		setScreen(loadingScreen);
-
-
 	}
 
 	public void cargaCompleta(){
 		gameScreen = new GameScreen(this);
 		gameOverScreen = new GameOverScreen(this);
+		opcionesScreen = new OpcionesScreen(this);
+		personajesScreen = new PersonajesScreen(this);
+		estadisticasScreen = new EstadisticasScreen(this);
+
 		menuScreen = new MenuScreen(this);
 		setScreen(menuScreen);
 	}

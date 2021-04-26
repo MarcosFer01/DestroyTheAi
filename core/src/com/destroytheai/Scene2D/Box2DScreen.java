@@ -1,4 +1,4 @@
-package com.destroytheai;
+package com.destroytheai.Scene2D;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -14,8 +14,10 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.destroytheai.BaseScreen;
+import com.destroytheai.MainGame;
 
-public class Box2DScreen extends BaseScreen{
+public class Box2DScreen extends BaseScreen {
 
 
 

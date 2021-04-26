@@ -9,17 +9,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.compression.lzma.Base;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-public class MenuScreen extends BaseScreen {
+public class EstadisticasScreen extends BaseScreen {
     private Stage stage;
     private Skin skin;
     private TextButton nuevoJuego;
     private TextButton cargarJuego;
     private TextButton opciones;
 
-    public MenuScreen(final MainGame game) {
+    public EstadisticasScreen(final MainGame game) {
         super(game);
 
         stage = new Stage(new FitViewport(640, 360));
@@ -32,7 +31,7 @@ public class MenuScreen extends BaseScreen {
         nuevoJuego.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(game.personajesScreen);
+                game.setScreen(game.gameScreen);
             }
         });
         cargarJuego.addCaptureListener(new ChangeListener() {
@@ -44,12 +43,12 @@ public class MenuScreen extends BaseScreen {
         opciones.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(game.opcionesScreen);
+                game.setScreen(game.gameScreen);
             }
         });
 
+        title.setPosition(320 - title.getWidth(), 320 - title.getHeight());
         title.setSize(100,100);
-        title.setPosition(320 - title.getWidth(), 180 - title.getHeight());
         nuevoJuego.setSize(200, 100);
         nuevoJuego.setPosition(20, 50);
         cargarJuego.setSize(200, 100);

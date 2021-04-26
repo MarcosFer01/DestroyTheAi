@@ -26,7 +26,7 @@ public class EnemigoEntidad extends Actor {
 
         BodyDef def = new BodyDef();
         def.position.set(position);
-        def.type = BodyDef.BodyType.DynamicBody;
+        def.type = BodyDef.BodyType.KinematicBody;
         body = world.createBody(def);
 
         PolygonShape box = new PolygonShape();

@@ -45,6 +45,7 @@ public class GameScreen extends BaseScreen {
         crearHabitaciones();
         dibujarHabitaciones();
         dibujarPasillos();
+        rellenarHabitaciones();
         for(int i=0;i<mapa.size();i++){
             System.out.println(mapa.get(i));
         }
@@ -60,24 +61,23 @@ public class GameScreen extends BaseScreen {
             public void beginContact(Contact contact) {
                 if(hayColision(contact, "player", "wall")){
                     personaje.setMovimiento(false);
-                    //personaje.setColision(true);
                 }
                 if(hayColision(contact, "player", "enemy")){
                     personaje.setMovimiento(false);
-                    personaje.setVida(personaje.getVida()-2);
-                    if(personaje.isVivo()){
-                        personaje.setVivo(false);
-                        Actions.sequence(
-                                Actions.delay(1.5f),
-                                Actions.run(new Runnable(){
-
-                                    @Override
-                                    public void run() {
-                                        game.setScreen(game.gameOverScreen);
-                                    }
-                                })
-                        );
-                    }
+                    System.out.println("Ejecutando combate");
+//                    if(personaje.isVivo()){
+//                        personaje.setVivo(false);
+//                        Actions.sequence(
+//                                Actions.delay(1.5f),
+//                                Actions.run(new Runnable(){
+//
+//                                    @Override
+//                                    public void run() {
+//                                        game.setScreen(game.gameOverScreen);
+//                                    }
+//                                })
+//                        );
+//                    }
                 }
             }
 
@@ -128,11 +128,16 @@ public class GameScreen extends BaseScreen {
                     }
                     case 4:{
                         listaSuelos.add(new SuelosEntidad(world, stairsTexture, new Vector2(i, j)));
+                        break;
+                    }
+                    case 5:{
+                        listaSuelos.add(new SuelosEntidad(world, floorTexture, new Vector2(i, j)));
+                        listaEnemigos.add(new EnemigoEntidad(world, slimeTexture, new Vector2(i, j)));
+                        break;
                     }
                 }
             }
         }
-        listaEnemigos.add(new EnemigoEntidad(world, slimeTexture, new Vector2(1, 1)));
         for(ParedesEntidad pared : listaParedes){
             stage.addActor(pared);
         }
@@ -191,28 +196,22 @@ public class GameScreen extends BaseScreen {
     }
 
     public void crearHabitaciones(){
-        int hspawn = 0;
-        int hfin = 0;
+        int cont=1;
         while(habitaciones.size()<=9){
             int x = (int) (Math.random()*(TAMAÑO_MAPA-10));
             int y = (int) (Math.random()*(TAMAÑO_MAPA-10));
-            int w = (int) (Math.random()*9+5);
-            int h = (int) (Math.random()*9+5);
+            int w = (int) (Math.random()*(9-5+1)+5);
+            int h = (int) (Math.random()*(9-5+1)+5);
             int s = 0;
             int f = 0;
-            if(hspawn==0){
-                s = (int) (Math.random()*2);
-            }
-            if(hspawn == 1 && hfin == 0){
-                f = (int) (Math.random()*2);
-            }
             Habitaciones hab = new Habitaciones(x, y, w, h);
-            if(s==1 && hspawn==0){
+            if(cont == 1){
                 hab.setSpawner(true);
-                hspawn++;
-            }else if (f==1 && hfin==0){
+            }else if (cont == 2){
                 hab.setFin(true);
-                hfin++;
+            } else if (cont > 2){
+                int numEn = (int) (Math.random()*3+1);
+                hab.setNumEn(numEn);
             }
             if(habitaciones.size()>0){
                 for(int i=0; i<habitaciones.size();i++){
@@ -226,6 +225,7 @@ public class GameScreen extends BaseScreen {
             else{
                 habitaciones.add(hab);
             }
+            cont++;
         }
     }
 
@@ -242,13 +242,7 @@ public class GameScreen extends BaseScreen {
                                 if(k==hab.getX() || k==hab.getX()+hab.getW()){
                                     mapa.get(j).set(k, 2);
                                 } else{
-                                    if((k==hab.getX()+1 && j==hab.getY()+1) && habitaciones.get(i).isSpawner()){
-                                        mapa.get(j).set(k, 3);
-                                    } else if((k==hab.getX()+1 && j==hab.getY()+1) && habitaciones.get(i).isFin()){
-                                        mapa.get(j).set(k, 4);
-                                    } else{
-                                        mapa.get(j).set(k, 1);
-                                    }
+                                    mapa.get(j).set(k, 1);
                                 }
                             }
                         }
@@ -267,30 +261,30 @@ public class GameScreen extends BaseScreen {
                     if(centro2[1]>centro1[1]){
                         if (k==centro1[0] && (j>=centro1[1] && j<=centro2[1])){
                             mapa.get(j).set(k,1);
-                            if((int) mapa.get(j).get(k+1) != 1 && (int) mapa.get(j).get(k+1) != 3 && (int) mapa.get(j).get(k+1) != 4){
+                            if((int) mapa.get(j).get(k+1) != 1){
                                 mapa.get(j).set((k+1), 2);
                             }
-                            if((int) mapa.get(j).get(k-1) != 1 && (int) mapa.get(j).get(k-1) != 3 && (int) mapa.get(j).get(k-1) != 4){
+                            if((int) mapa.get(j).get(k-1) != 1){
                                 mapa.get(j).set((k-1), 2);
                             }
                         }
                         if (centro2[0]>centro1[0]){
                             if (j==centro2[1] && (k>=centro1[0] && k<=centro2[0])){
                                 mapa.get(j).set(k,1);
-                                if((int) mapa.get(j+1).get(k) != 1 && (int) mapa.get(j+1).get(k) != 3 && (int) mapa.get(j+1).get(k) != 4){
+                                if((int) mapa.get(j+1).get(k) != 1){
                                     mapa.get(j+1).set(k, 2);
                                 }
-                                if((int) mapa.get(j-1).get(k) != 1 && (int) mapa.get(j-1).get(k) != 3 && (int) mapa.get(j-1).get(k) != 4){
+                                if((int) mapa.get(j-1).get(k) != 1){
                                     mapa.get(j-1).set(k, 2);
                                 }
                             }
                         } else {
                             if (j==centro2[1] && (k<=centro1[0] && k>=centro2[0])){
                                 mapa.get(j).set(k,1);
-                                if((int) mapa.get(j+1).get(k) != 1 && (int) mapa.get(j+1).get(k) != 3 && (int) mapa.get(j+1).get(k) != 4){
+                                if((int) mapa.get(j+1).get(k) != 1){
                                     mapa.get(j+1).set(k, 2);
                                 }
-                                if((int) mapa.get(j-1).get(k) != 1 && (int) mapa.get(j-1).get(k) != 3 && (int) mapa.get(j-1).get(k) != 4){
+                                if((int) mapa.get(j-1).get(k) != 1){
                                     mapa.get(j-1).set(k, 2);
                                 }
                             }
@@ -298,32 +292,61 @@ public class GameScreen extends BaseScreen {
                     } else {
                         if (k==centro1[0] && (j<=centro1[1] && j>=centro2[1])){
                             mapa.get(j).set(k,1);
-                            if((int) mapa.get(j).get(k+1) != 1 && (int) mapa.get(j).get(k+1) != 3 && (int) mapa.get(j).get(k+1) != 4){
+                            if((int) mapa.get(j).get(k+1) != 1){
                                 mapa.get(j).set((k+1), 2);
                             }
-                            if((int) mapa.get(j).get(k-1) != 1 && (int) mapa.get(j).get(k-1) != 3 && (int) mapa.get(j).get(k-1) != 4){
+                            if((int) mapa.get(j).get(k-1) != 1){
                                 mapa.get(j).set((k-1), 2);
                             }
                         }
                         if (centro2[0]>centro1[0]){
                             if (j==centro2[1] && (k>=centro1[0] && k<=centro2[0])){
                                 mapa.get(j).set(k,1);
-                                if((int) mapa.get(j+1).get(k) != 1 && (int) mapa.get(j).get(k+1) != 3 && (int) mapa.get(j).get(k+1) != 4){
+                                if((int) mapa.get(j+1).get(k) != 1){
                                     mapa.get(j+1).set(k, 2);
                                 }
-                                if((int) mapa.get(j-1).get(k) != 1 && (int) mapa.get(j-1).get(k) != 3 && (int) mapa.get(j-1).get(k) != 4){
+                                if((int) mapa.get(j-1).get(k) != 1){
                                     mapa.get(j-1).set(k, 2);
                                 }
                             }
                         } else {
                             if (j==centro2[1] && (k<=centro1[0] && k>=centro2[0])){
                                 mapa.get(j).set(k,1);
-                                if((int) mapa.get(j+1).get(k) != 1 && (int) mapa.get(j+1).get(k) != 3 && (int) mapa.get(j+1).get(k) != 4){
+                                if((int) mapa.get(j+1).get(k) != 1){
                                     mapa.get(j+1).set(k, 2);
                                 }
-                                if((int) mapa.get(j-1).get(k) != 1 && (int) mapa.get(j-1).get(k) != 3 && (int) mapa.get(j-1).get(k) != 4){
+                                if((int) mapa.get(j-1).get(k) != 1){
                                     mapa.get(j-1).set(k, 2);
                                 }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void rellenarHabitaciones(){
+        for(int i=0; i<habitaciones.size();i++){
+            Habitaciones hab = habitaciones.get(i);
+            for(int j=0; j<mapa.size(); j++){
+                for(int k=0; k<mapa.size(); k++){
+                    if (i==0){
+                        if(k==hab.getX()+1 && j==hab.getY()+1){
+                            mapa.get(j).set(k, 3);
+                        }
+                    }
+                    else if (i==1){
+                        if (k==hab.getX()+1 && j==hab.getY()+1){
+                            mapa.get(j).set(k, 4);
+                        }
+                    }
+                    else if (i>1){
+                        for (int l=0; l<hab.getNumEn();l++){
+                            int eX = (int) (Math.random()*((hab.getX()+(hab.getW()-1))-(hab.getX()+1)+1)+(hab.getX()+1));
+                            int eY = (int) (Math.random()*((hab.getY()+(hab.getH()-1))-(hab.getY()+1)+1)+(hab.getY()+1));
+                            if(k==eX && j==eY){
+                                mapa.get(j).set(k, 5);
                             }
                         }
                     }

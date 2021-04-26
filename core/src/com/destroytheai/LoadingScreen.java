@@ -22,8 +22,9 @@ public class LoadingScreen extends BaseScreen{
         loading = new Label("Loading...", skin);
         loading.setPosition(320-loading.getWidth()/2, 180-loading.getHeight()/2);
         porcentage = new Label("", skin);
-        porcentage.setPosition(320-loading.getWidth()/2, 200-loading.getHeight()/2);
+        porcentage.setPosition(320-loading.getWidth()/2, 140-loading.getHeight()/2);
         stage.addActor(loading);
+        stage.addActor(porcentage);
     }
 
     @Override
