@@ -1,26 +1,40 @@
 package com.destroytheai.Mecanicas;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.destroytheai.Entidades.PersonajeEntidad;
 
 public class Controler {
     Viewport viewport;
     Stage stage;
     boolean up, down, left, right;
-    OrthographicCamera cam;
 
     public Controler(){
         viewport = new FitViewport(640, 360);
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
+
+        Image opciones = new Image(new Texture("opciones.png"));
+        opciones.setSize(50,50);
+        opciones.setPosition(590, 310);
+        opciones.addListener(new InputListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+
+                return true;
+            }
+        });
 
         Image upImg = new Image(new Texture("up.png"));
         upImg.setSize(50,50);
@@ -90,7 +104,7 @@ public class Controler {
         stage.addActor(downImg);
         stage.addActor(rightImg);
         stage.addActor(leftImg);
-
+        stage.addActor(opciones);
     }
 
     public void draw(){

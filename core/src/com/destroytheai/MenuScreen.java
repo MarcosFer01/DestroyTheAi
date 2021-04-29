@@ -24,7 +24,7 @@ public class MenuScreen extends BaseScreen {
 
         stage = new Stage(new FitViewport(640, 360));
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
-        Image title = new Image(new Texture("gameover.png"));
+        Image title = new Image(new Texture("logoE.png"));
         nuevoJuego = new TextButton("Nuevo Juego", skin);
         cargarJuego = new TextButton("Cargar Juego", skin);
         opciones = new TextButton("Opciones", skin);
@@ -38,7 +38,7 @@ public class MenuScreen extends BaseScreen {
         cargarJuego.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(game.gameScreen);
+                game.setScreen(game.gameOverScreen);
             }
         });
         opciones.addCaptureListener(new ChangeListener() {
@@ -48,8 +48,8 @@ public class MenuScreen extends BaseScreen {
             }
         });
 
-        title.setSize(100,100);
-        title.setPosition(320 - title.getWidth(), 180 - title.getHeight());
+        title.setSize(340,50);
+        title.setPosition(150, 250);
         nuevoJuego.setSize(200, 100);
         nuevoJuego.setPosition(20, 50);
         cargarJuego.setSize(200, 100);

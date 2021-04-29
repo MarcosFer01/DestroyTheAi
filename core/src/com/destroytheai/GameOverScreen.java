@@ -33,8 +33,8 @@ public class GameOverScreen extends BaseScreen{
             }
         });
 
-        gameover.setPosition(320 - gameover.getWidth(), 320 - gameover.getHeight());
-        gameover.setSize(3,3);
+        gameover.setPosition(120, 70);
+        gameover.setSize(400,400);
         menu.setSize(200, 100);
         menu.setPosition(220, 50);
         stage.addActor(menu);

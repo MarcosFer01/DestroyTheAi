@@ -15,7 +15,9 @@ import com.destroytheai.Mecanicas.Controler;
 import com.destroytheai.Mecanicas.HUD;
 import com.destroytheai.Mecanicas.SimpleDirectionGestureDetector;
 
+import static com.destroytheai.Constantes.DAÑO_G;
 import static com.destroytheai.Constantes.PIXELS_IN_METERS;
+import static com.destroytheai.Constantes.VIDA_G;
 
 public class PersonajeEntidad extends Actor {
 
@@ -25,7 +27,8 @@ public class PersonajeEntidad extends Actor {
     private Fixture fixture;
     private int vida;
     private int vidaMax;
-    private int oro;
+    private int oro = 0;
+    private int daño;
     private boolean movimiento = true;
     private boolean colision = false;
     private boolean vivo = true;
@@ -67,18 +70,28 @@ public class PersonajeEntidad extends Actor {
     public void setOro(int oro) {
         this.oro = oro;
     }
+    public int getDaño() {
+        return daño;
+    }
+    public void setDaño(int daño) {
+        this.daño = daño;
+    }
 
     public PersonajeEntidad(World world, Texture texture, Vector2 position){
         this.world=world;
         this.texture=texture;
+        this.setVivo(true);
+        this.setVidaMax(VIDA_G);
+        this.setVida(VIDA_G);
+        this.setDaño(DAÑO_G);
 
         BodyDef def = new BodyDef();
         def.position.set(position);
-        def.type = BodyDef.BodyType.KinematicBody;
+        def.type = BodyDef.BodyType.DynamicBody;
         body = world.createBody(def);
 
         PolygonShape box = new PolygonShape();
-        box.setAsBox(0.5f, 0.5f);
+        box.setAsBox(0.4f, 0.4f);
         fixture = body.createFixture(box, 1);
         fixture.setUserData("player");
         box.dispose();
@@ -97,9 +110,6 @@ public class PersonajeEntidad extends Actor {
     public void act(float delta) {
         if(!movimiento){
             body.setLinearVelocity(0,0);
-        }
-        if(vida<=0){
-            vivo=false;
         }
         handleInput();
     }
@@ -151,5 +161,12 @@ public class PersonajeEntidad extends Actor {
     public void detach(){
         body.destroyFixture(fixture);
         world.destroyBody(body);
+    }
+
+    public void recibirDaño(int daño){
+        this.setVida(this.getVida()-daño);
+        if (this.getVida()<=0){
+            this.setVivo(false);
+        }
     }
 }

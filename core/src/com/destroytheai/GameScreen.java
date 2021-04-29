@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.destroytheai.Entidades.EnemigoEntidad;
 import com.destroytheai.Entidades.Habitaciones;
@@ -18,11 +19,15 @@ import com.destroytheai.Entidades.ParedesEntidad;
 import com.destroytheai.Entidades.PersonajeEntidad;
 import com.destroytheai.Entidades.SuelosEntidad;
 import com.destroytheai.Mecanicas.Controler;
+import com.destroytheai.Mecanicas.HUD;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.destroytheai.Constantes.DAÑO_G;
+import static com.destroytheai.Constantes.PIXELS_IN_METERS;
 import static com.destroytheai.Constantes.TAMAÑO_MAPA;
+import static com.destroytheai.Constantes.VIDA_G;
 
 public class GameScreen extends BaseScreen {
 
@@ -30,10 +35,11 @@ public class GameScreen extends BaseScreen {
     private World world;
     private Controler controler;
     private PersonajeEntidad personaje;
+    private SuelosEntidad escaleras;
     private List<ArrayList> mapa = new ArrayList<ArrayList>();
     private ArrayList<Habitaciones> habitaciones = new ArrayList<Habitaciones>();
     private List<ParedesEntidad> listaParedes = new ArrayList<ParedesEntidad>();
-    private List<SuelosEntidad> listaSuelos = new ArrayList<SuelosEntidad>();
+    private List<Image> listaSuelos = new ArrayList<Image>();
     private List<EnemigoEntidad> listaEnemigos = new ArrayList<EnemigoEntidad>();
 
     public GameScreen(final MainGame game) {
@@ -59,25 +65,48 @@ public class GameScreen extends BaseScreen {
 
             @Override
             public void beginContact(Contact contact) {
-                if(hayColision(contact, "player", "wall")){
-                    personaje.setMovimiento(false);
+                if(hayColision(contact, "player", "floor")){
+                    System.out.println("fin piso");
+                    Actions.sequence(
+                            Actions.delay(1.5f),
+                            Actions.run(new Runnable(){
+
+                                @Override
+                                public void run() {
+                                    game.setScreen(game.gameOverScreen);
+                                }
+                            })
+                    );
                 }
                 if(hayColision(contact, "player", "enemy")){
-                    personaje.setMovimiento(false);
                     System.out.println("Ejecutando combate");
-//                    if(personaje.isVivo()){
-//                        personaje.setVivo(false);
-//                        Actions.sequence(
-//                                Actions.delay(1.5f),
-//                                Actions.run(new Runnable(){
-//
-//                                    @Override
-//                                    public void run() {
-//                                        game.setScreen(game.gameOverScreen);
-//                                    }
-//                                })
-//                        );
-//                    }
+                    Vector2 pos1 = contact.getFixtureB().getBody().getPosition();
+                    for (int i=0; i<listaEnemigos.size(); i++){
+                        Vector2 pos2 = new Vector2(listaEnemigos.get(i).getX(), listaEnemigos.get(i).getY());
+                        if (pos1==pos2){
+                            System.out.println("Enemigo detectado");
+                            listaEnemigos.get(i).recibirDaño(personaje.getDaño());
+                            personaje.recibirDaño(listaEnemigos.get(i).getDaño());
+                            if(personaje.isVivo()==false){
+                                Actions.sequence(
+                                        Actions.delay(1.5f),
+                                        Actions.run(new Runnable(){
+
+                                            @Override
+                                            public void run() {
+                                                game.setScreen(game.gameOverScreen);
+                                            }
+                                        })
+                                );
+                            }
+                            if (listaEnemigos.get(i).isVivo()==false){
+                                int oro = (int) (Math.random()*7+3);
+                                listaEnemigos.get(i).remove();
+                                listaEnemigos.remove(i);
+                                personaje.setOro(personaje.getOro()+oro);
+                            }
+                        }
+                    }
                 }
             }
 
@@ -102,7 +131,6 @@ public class GameScreen extends BaseScreen {
     public void show() {
         Texture playerTexture = game.getManager().get("knight_idle_anim_f0.png");
         Texture wallTexture = game.getManager().get("wall_1.png");
-        Texture floorTexture = game.getManager().get("floor_1.png");
         Texture slimeTexture = game.getManager().get("slime_idle_anim_f0.png");
         Texture stairsTexture = game.getManager().get("stair_nextlevel.png");
 
@@ -114,7 +142,10 @@ public class GameScreen extends BaseScreen {
                         break;
                     }
                     case 1:{
-                        listaSuelos.add(new SuelosEntidad(world, floorTexture, new Vector2(i,j)));
+                        Image suelo = new Image(new Texture("floor_1.png"));
+                        suelo.setPosition(i*PIXELS_IN_METERS, j*PIXELS_IN_METERS);
+                        suelo.setSize(PIXELS_IN_METERS, PIXELS_IN_METERS);
+                        listaSuelos.add(suelo);
                         break;
                     }
                     case 2:{
@@ -122,16 +153,22 @@ public class GameScreen extends BaseScreen {
                         break;
                     }
                     case 3:{
-                        listaSuelos.add(new SuelosEntidad(world, floorTexture, new Vector2(i, j)));
+                        Image suelo = new Image(new Texture("floor_1.png"));
+                        suelo.setPosition(i*PIXELS_IN_METERS, j*PIXELS_IN_METERS);
+                        suelo.setSize(PIXELS_IN_METERS, PIXELS_IN_METERS);
+                        listaSuelos.add(suelo);
                         personaje = new PersonajeEntidad(world, playerTexture, new Vector2(i, j));
                         break;
                     }
                     case 4:{
-                        listaSuelos.add(new SuelosEntidad(world, stairsTexture, new Vector2(i, j)));
+                        escaleras = new SuelosEntidad(world, stairsTexture, new Vector2(i, j));
                         break;
                     }
                     case 5:{
-                        listaSuelos.add(new SuelosEntidad(world, floorTexture, new Vector2(i, j)));
+                        Image suelo = new Image(new Texture("floor_1.png"));
+                        suelo.setPosition(i*PIXELS_IN_METERS, j*PIXELS_IN_METERS);
+                        suelo.setSize(PIXELS_IN_METERS, PIXELS_IN_METERS);
+                        listaSuelos.add(suelo);
                         listaEnemigos.add(new EnemigoEntidad(world, slimeTexture, new Vector2(i, j)));
                         break;
                     }
@@ -141,13 +178,14 @@ public class GameScreen extends BaseScreen {
         for(ParedesEntidad pared : listaParedes){
             stage.addActor(pared);
         }
-        for(SuelosEntidad suelo : listaSuelos){
+        for(Image suelo : listaSuelos){
             stage.addActor(suelo);
         }
         for(EnemigoEntidad enemigo : listaEnemigos){
             stage.addActor(enemigo);
         }
         stage.addActor(personaje);
+        stage.addActor(escaleras);
     }
 
     @Override

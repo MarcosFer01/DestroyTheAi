@@ -28,23 +28,9 @@ public class HUD {
 
         vida = new Label("Vida: "+personaje.getVida()+"/"+personaje.getVidaMax(), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         oro = new Label("Oro: "+personaje.getOro(), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        Image opciones = new Image(new Texture("opciones.png"));
 
-        opciones.setSize(50,50);
-        opciones.setPosition(590, 310);
-        vida.setPosition(10, 350);
-        oro.setPosition(10, 340);
-
-        opciones.addListener(new InputListener(){
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
-                return true;
-            }
-        });
         stage.addActor(vida);
         stage.addActor(oro);
-        stage.addActor(opciones);
     }
 
     public void draw(){
