@@ -24,6 +24,8 @@ public class MainGame extends Game {
 	public void create() {
 		manager = new AssetManager();
 		manager.load("knight_idle_anim_f0.png", Texture.class);
+		manager.load("elf_f_hit_anim_f0.png", Texture.class);
+		manager.load("wizzard_f_hit_anim_f0.png", Texture.class);
 		manager.load("slime_idle_anim_f0.png", Texture.class);
 		manager.load("floor_1.png", Texture.class);
 		manager.load("wall_1.png", Texture.class);
@@ -35,10 +37,10 @@ public class MainGame extends Game {
 	}
 
 	public void cargaCompleta(){
+		personajesScreen = new PersonajesScreen(this);
 		gameScreen = new GameScreen(this);
 		gameOverScreen = new GameOverScreen(this);
 		opcionesScreen = new OpcionesScreen(this);
-		personajesScreen = new PersonajesScreen(this);
 		estadisticasScreen = new EstadisticasScreen(this);
 
 		menuScreen = new MenuScreen(this);

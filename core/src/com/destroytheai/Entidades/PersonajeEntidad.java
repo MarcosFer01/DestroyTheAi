@@ -1,6 +1,5 @@
 package com.destroytheai.Entidades;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -10,14 +9,15 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.destroytheai.Constantes;
 import com.destroytheai.Mecanicas.Controler;
-import com.destroytheai.Mecanicas.HUD;
-import com.destroytheai.Mecanicas.SimpleDirectionGestureDetector;
 
+import static com.destroytheai.Constantes.DAÑO_A;
 import static com.destroytheai.Constantes.DAÑO_G;
+import static com.destroytheai.Constantes.DAÑO_M;
 import static com.destroytheai.Constantes.PIXELS_IN_METERS;
+import static com.destroytheai.Constantes.VIDA_A;
 import static com.destroytheai.Constantes.VIDA_G;
+import static com.destroytheai.Constantes.VIDA_M;
 
 public class PersonajeEntidad extends Actor {
 
@@ -25,6 +25,7 @@ public class PersonajeEntidad extends Actor {
     private World world;
     private Body body;
     private Fixture fixture;
+    private Vector2 position;
     private int vida;
     private int vidaMax;
     private int oro = 0;
@@ -77,13 +78,31 @@ public class PersonajeEntidad extends Actor {
         this.daño = daño;
     }
 
-    public PersonajeEntidad(World world, Texture texture, Vector2 position){
+    public PersonajeEntidad(World world, Texture texture, Vector2 position, int selecPer){
         this.world=world;
         this.texture=texture;
         this.setVivo(true);
-        this.setVidaMax(VIDA_G);
-        this.setVida(VIDA_G);
-        this.setDaño(DAÑO_G);
+
+        switch (selecPer){
+            case 1:{
+                this.setVidaMax(VIDA_G);
+                this.setVida(VIDA_G);
+                this.setDaño(DAÑO_G);
+                break;
+            }
+            case 2:{
+                this.setVidaMax(VIDA_A);
+                this.setVida(VIDA_A);
+                this.setDaño(DAÑO_A);
+                break;
+            }
+            case 3:{
+                this.setVidaMax(VIDA_M);
+                this.setVida(VIDA_M);
+                this.setDaño(DAÑO_M);
+                break;
+            }
+        }
 
         BodyDef def = new BodyDef();
         def.position.set(position);

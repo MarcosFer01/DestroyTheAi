@@ -46,16 +46,8 @@ public class GameScreen extends BaseScreen {
         super(game);
         stage = new Stage(new FitViewport(640, 360));
         world = new World(new Vector2(0, 0), true);
+        crearPiso();
         controler = new Controler();
-        crearMapa();
-        crearHabitaciones();
-        dibujarHabitaciones();
-        dibujarPasillos();
-        rellenarHabitaciones();
-        for(int i=0;i<mapa.size();i++){
-            System.out.println(mapa.get(i));
-        }
-
         world.setContactListener(new ContactListener() {
 
             private boolean hayColision(Contact contact, Object userA, Object userB){
@@ -80,30 +72,66 @@ public class GameScreen extends BaseScreen {
                 }
                 if(hayColision(contact, "player", "enemy")){
                     System.out.println("Ejecutando combate");
-                    Vector2 pos1 = contact.getFixtureB().getBody().getPosition();
-                    for (int i=0; i<listaEnemigos.size(); i++){
-                        Vector2 pos2 = new Vector2(listaEnemigos.get(i).getX(), listaEnemigos.get(i).getY());
-                        if (pos1==pos2){
-                            System.out.println("Enemigo detectado");
-                            listaEnemigos.get(i).recibirDaño(personaje.getDaño());
-                            personaje.recibirDaño(listaEnemigos.get(i).getDaño());
-                            if(personaje.isVivo()==false){
-                                Actions.sequence(
-                                        Actions.delay(1.5f),
-                                        Actions.run(new Runnable(){
+                    if (contact.getFixtureB().getUserData().equals("enemy")){
+                        Vector2 pos1 = contact.getFixtureB().getBody().getPosition();
+                        pos1.set(pos1.x*PIXELS_IN_METERS, pos1.y*PIXELS_IN_METERS);
+                        pos1.set((int) pos1.x, (int) pos1.y);
+                        for (int i=0; i<listaEnemigos.size(); i++){
+                            Vector2 pos2 = new Vector2(listaEnemigos.get(i).getX(), listaEnemigos.get(i).getY());
+                            pos2.set((int) pos2.x, (int) pos2.y);
+                            if (pos1.equals(pos2)){
+                                System.out.println("Enemigo detectado");
+                                listaEnemigos.get(i).recibirDaño(personaje.getDaño());
+                                personaje.recibirDaño(listaEnemigos.get(i).getDaño());
+                                if(personaje.isVivo()==false){
+                                    Actions.sequence(
+                                            Actions.delay(1.5f),
+                                            Actions.run(new Runnable(){
 
-                                            @Override
-                                            public void run() {
-                                                game.setScreen(game.gameOverScreen);
-                                            }
-                                        })
-                                );
+                                                @Override
+                                                public void run() {
+                                                    game.setScreen(game.gameOverScreen);
+                                                }
+                                            })
+                                    );
+                                }
+                                if (listaEnemigos.get(i).isVivo()==false){
+                                    int oro = (int) (Math.random()*7+3);
+                                    listaEnemigos.get(i).remove();
+                                    listaEnemigos.remove(i);
+                                    personaje.setOro(personaje.getOro()+oro);
+                                }
                             }
-                            if (listaEnemigos.get(i).isVivo()==false){
-                                int oro = (int) (Math.random()*7+3);
-                                listaEnemigos.get(i).remove();
-                                listaEnemigos.remove(i);
-                                personaje.setOro(personaje.getOro()+oro);
+                        }
+                    } else {
+                        Vector2 pos1 = contact.getFixtureA().getBody().getPosition();
+                        pos1.set(pos1.x*PIXELS_IN_METERS, pos1.y*PIXELS_IN_METERS);
+                        pos1.set((int) pos1.x, (int) pos1.y);
+                        for (int i=0; i<listaEnemigos.size(); i++){
+                            Vector2 pos2 = new Vector2(listaEnemigos.get(i).getX(), listaEnemigos.get(i).getY());
+                            pos2.set((int) pos2.x, (int) pos2.y);
+                            if (pos1.equals(pos2)){
+                                System.out.println("Enemigo detectado");
+                                listaEnemigos.get(i).recibirDaño(personaje.getDaño());
+                                personaje.recibirDaño(listaEnemigos.get(i).getDaño());
+                                if(personaje.isVivo()==false){
+                                    Actions.sequence(
+                                            Actions.delay(1.5f),
+                                            Actions.run(new Runnable(){
+
+                                                @Override
+                                                public void run() {
+                                                    game.setScreen(game.gameOverScreen);
+                                                }
+                                            })
+                                    );
+                                }
+                                if (listaEnemigos.get(i).isVivo()==false){
+                                    int oro = (int) (Math.random()*7+3);
+                                    listaEnemigos.get(i).remove();
+                                    listaEnemigos.remove(i);
+                                    personaje.setOro(personaje.getOro()+oro);
+                                }
                             }
                         }
                     }
@@ -129,7 +157,9 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public void show() {
-        Texture playerTexture = game.getManager().get("knight_idle_anim_f0.png");
+        Texture cabTexture = game.getManager().get("knight_idle_anim_f0.png");
+        Texture aseTexture = game.getManager().get("elf_f_hit_anim_f0.png");
+        Texture magTexture = game.getManager().get("wizzard_f_hit_anim_f0.png");
         Texture wallTexture = game.getManager().get("wall_1.png");
         Texture slimeTexture = game.getManager().get("slime_idle_anim_f0.png");
         Texture stairsTexture = game.getManager().get("stair_nextlevel.png");
@@ -157,7 +187,21 @@ public class GameScreen extends BaseScreen {
                         suelo.setPosition(i*PIXELS_IN_METERS, j*PIXELS_IN_METERS);
                         suelo.setSize(PIXELS_IN_METERS, PIXELS_IN_METERS);
                         listaSuelos.add(suelo);
-                        personaje = new PersonajeEntidad(world, playerTexture, new Vector2(i, j));
+                        int selecPer = game.personajesScreen.getSelecPer();
+                        switch (selecPer){
+                            case 1:{
+                                personaje = new PersonajeEntidad(world, cabTexture, new Vector2(i, j), 1);
+                                break;
+                            }
+                            case 2:{
+                                personaje = new PersonajeEntidad(world, aseTexture, new Vector2(i, j), 2);
+                                break;
+                            }
+                            case 3:{
+                                personaje = new PersonajeEntidad(world, magTexture, new Vector2(i, j), 3);
+                                break;
+                            }
+                        }
                         break;
                     }
                     case 4:{
@@ -391,5 +435,13 @@ public class GameScreen extends BaseScreen {
                 }
             }
         }
+    }
+
+    public void crearPiso(){
+        crearMapa();
+        crearHabitaciones();
+        dibujarHabitaciones();
+        dibujarPasillos();
+        rellenarHabitaciones();
     }
 }

@@ -20,10 +20,17 @@ public class PersonajesScreen extends BaseScreen {
     private TextButton cabSel;
     private TextButton aseSel;
     private TextButton magSel;
+    private int selecPer;
+
+    public int getSelecPer() {
+        return selecPer;
+    }
+    public void setSelecPer(int selecPer) {
+        this.selecPer = selecPer;
+    }
 
     public PersonajesScreen(final MainGame game) {
         super(game);
-
         stage = new Stage(new FitViewport(640, 360));
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
         Image cabImg = new Image(new Texture("knight_idle_anim_f0.png"));
@@ -42,18 +49,21 @@ public class PersonajesScreen extends BaseScreen {
         cabSel.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                selecPer=1;
                 game.setScreen(game.gameScreen);
             }
         });
         aseSel.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                selecPer=2;
                 game.setScreen(game.gameScreen);
             }
         });
         magSel.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                selecPer=3;
                 game.setScreen(game.gameScreen);
             }
         });
