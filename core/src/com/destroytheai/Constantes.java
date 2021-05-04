@@ -18,4 +18,17 @@ public class Constantes {
     //Constantes del mago
     public static final int VIDA_M = 10;
     public static final int DAÑO_M = 4;
+
+    //Constantes de Enemigos
+    //Constantes del slime
+    public static final int VIDA_S = 2;
+    public static final int DAÑO_S = 2;
+
+    //Constantes del goblin
+    public static final int VIDA_N = 4;
+    public static final int DAÑO_N = 3;
+
+    //Constantes del ojo
+    public static final int VIDA_O = 10;
+    public static final int DAÑO_O = 4;
 }

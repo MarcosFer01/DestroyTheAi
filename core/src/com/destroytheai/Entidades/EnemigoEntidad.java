@@ -10,15 +10,27 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+import static com.destroytheai.Constantes.DAÑO_A;
+import static com.destroytheai.Constantes.DAÑO_G;
+import static com.destroytheai.Constantes.DAÑO_M;
+import static com.destroytheai.Constantes.DAÑO_N;
+import static com.destroytheai.Constantes.DAÑO_O;
+import static com.destroytheai.Constantes.DAÑO_S;
 import static com.destroytheai.Constantes.PIXELS_IN_METERS;
+import static com.destroytheai.Constantes.VIDA_A;
+import static com.destroytheai.Constantes.VIDA_G;
+import static com.destroytheai.Constantes.VIDA_M;
+import static com.destroytheai.Constantes.VIDA_N;
+import static com.destroytheai.Constantes.VIDA_O;
+import static com.destroytheai.Constantes.VIDA_S;
 
 public class EnemigoEntidad extends Actor {
     private Texture texture;
     private World world;
     private Body body;
     private Fixture fixture;
-    private int vida = 2;
-    private int daño = 2;
+    private int vida;
+    private int daño;
     private boolean vivo;
     private boolean movimiento = false;
 
@@ -41,10 +53,12 @@ public class EnemigoEntidad extends Actor {
         this.vivo = vivo;
     }
 
-    public EnemigoEntidad(World world, Texture texture, Vector2 position){
+    public EnemigoEntidad(World world, Texture texture, Vector2 position, int selecEne){
         this.world=world;
         this.texture=texture;
         this.setVivo(true);
+
+        estadisticas(selecEne);
 
         BodyDef def = new BodyDef();
         def.position.set(position);
@@ -83,6 +97,26 @@ public class EnemigoEntidad extends Actor {
         this.setVida(this.getVida()-daño);
         if (this.getVida()<=0){
             this.setVivo(false);
+        }
+    }
+
+    public void estadisticas(int selecEne){
+        switch (selecEne){
+            case 1:{
+                this.setVida(VIDA_S);
+                this.setDaño(DAÑO_S);
+                break;
+            }
+            case 2:{
+                this.setVida(VIDA_N);
+                this.setDaño(DAÑO_N);
+                break;
+            }
+            case 3:{
+                this.setVida(VIDA_O);
+                this.setDaño(DAÑO_O);
+                break;
+            }
         }
     }
 }

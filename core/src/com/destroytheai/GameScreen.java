@@ -19,21 +19,19 @@ import com.destroytheai.Entidades.ParedesEntidad;
 import com.destroytheai.Entidades.PersonajeEntidad;
 import com.destroytheai.Entidades.SuelosEntidad;
 import com.destroytheai.Mecanicas.Controler;
-import com.destroytheai.Mecanicas.HUD;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.destroytheai.Constantes.DAÑO_G;
 import static com.destroytheai.Constantes.PIXELS_IN_METERS;
 import static com.destroytheai.Constantes.TAMAÑO_MAPA;
-import static com.destroytheai.Constantes.VIDA_G;
 
 public class GameScreen extends BaseScreen {
 
     private Stage stage;
     private World world;
     private Controler controler;
+    private int nivel;
     private PersonajeEntidad personaje;
     private SuelosEntidad escaleras;
     private List<ArrayList> mapa = new ArrayList<ArrayList>();
@@ -42,8 +40,9 @@ public class GameScreen extends BaseScreen {
     private List<Image> listaSuelos = new ArrayList<Image>();
     private List<EnemigoEntidad> listaEnemigos = new ArrayList<EnemigoEntidad>();
 
-    public GameScreen(final MainGame game) {
+    public GameScreen(final MainGame game, int piso) {
         super(game);
+        nivel=piso;
         stage = new Stage(new FitViewport(640, 360));
         world = new World(new Vector2(0, 0), true);
         crearPiso();
@@ -59,15 +58,25 @@ public class GameScreen extends BaseScreen {
             public void beginContact(Contact contact) {
                 if(hayColision(contact, "player", "floor")){
                     System.out.println("fin piso");
-                    Actions.sequence(
-                            Actions.delay(1.5f),
-                            Actions.run(new Runnable(){
+                    stage.addAction(
+                            Actions.sequence(
+                                    Actions.delay(1.5f),
+                                    Actions.run(new Runnable(){
 
-                                @Override
-                                public void run() {
-                                    game.setScreen(game.gameOverScreen);
-                                }
-                            })
+                                        @Override
+                                        public void run() {
+                                            switch (nivel){
+                                                case 1:{
+                                                    game.setScreen(new GameScreen(game, 2));
+                                                }
+                                                case 2:{
+                                                    game.setScreen(new GameScreen(game, 3));
+                                                }
+                                            }
+
+                                        }
+                                    })
+                            )
                     );
                 }
                 if(hayColision(contact, "player", "enemy")){
@@ -84,15 +93,17 @@ public class GameScreen extends BaseScreen {
                                 listaEnemigos.get(i).recibirDaño(personaje.getDaño());
                                 personaje.recibirDaño(listaEnemigos.get(i).getDaño());
                                 if(personaje.isVivo()==false){
-                                    Actions.sequence(
-                                            Actions.delay(1.5f),
-                                            Actions.run(new Runnable(){
+                                    stage.addAction(
+                                            Actions.sequence(
+                                                    Actions.delay(1.5f),
+                                                    Actions.run(new Runnable(){
 
-                                                @Override
-                                                public void run() {
-                                                    game.setScreen(game.gameOverScreen);
-                                                }
-                                            })
+                                                        @Override
+                                                        public void run() {
+                                                            game.setScreen(game.gameOverScreen);
+                                                        }
+                                                    })
+                                            )
                                     );
                                 }
                                 if (listaEnemigos.get(i).isVivo()==false){
@@ -100,6 +111,7 @@ public class GameScreen extends BaseScreen {
                                     listaEnemigos.get(i).remove();
                                     listaEnemigos.remove(i);
                                     personaje.setOro(personaje.getOro()+oro);
+                                    controler.setTextoPer();
                                 }
                             }
                         }
@@ -115,15 +127,17 @@ public class GameScreen extends BaseScreen {
                                 listaEnemigos.get(i).recibirDaño(personaje.getDaño());
                                 personaje.recibirDaño(listaEnemigos.get(i).getDaño());
                                 if(personaje.isVivo()==false){
-                                    Actions.sequence(
-                                            Actions.delay(1.5f),
-                                            Actions.run(new Runnable(){
+                                    stage.addAction(
+                                            Actions.sequence(
+                                                    Actions.delay(1.5f),
+                                                    Actions.run(new Runnable(){
 
-                                                @Override
-                                                public void run() {
-                                                    game.setScreen(game.gameOverScreen);
-                                                }
-                                            })
+                                                        @Override
+                                                        public void run() {
+                                                            game.setScreen(game.gameOverScreen);
+                                                        }
+                                                    })
+                                            )
                                     );
                                 }
                                 if (listaEnemigos.get(i).isVivo()==false){
@@ -131,6 +145,7 @@ public class GameScreen extends BaseScreen {
                                     listaEnemigos.get(i).remove();
                                     listaEnemigos.remove(i);
                                     personaje.setOro(personaje.getOro()+oro);
+                                    controler.setTextoPer();
                                 }
                             }
                         }
@@ -157,11 +172,15 @@ public class GameScreen extends BaseScreen {
 
     @Override
     public void show() {
+        Gdx.input.setInputProcessor(stage);
         Texture cabTexture = game.getManager().get("knight_idle_anim_f0.png");
         Texture aseTexture = game.getManager().get("elf_f_hit_anim_f0.png");
         Texture magTexture = game.getManager().get("wizzard_f_hit_anim_f0.png");
         Texture wallTexture = game.getManager().get("wall_1.png");
+        Texture rockTexture = game.getManager().get("floor_5.png");
         Texture slimeTexture = game.getManager().get("slime_idle_anim_f0.png");
+        Texture goblinTexture = game.getManager().get("goblin_idle_anim_f0.png");
+        Texture eyeTexture = game.getManager().get("fly_anim_f1.png");
         Texture stairsTexture = game.getManager().get("stair_nextlevel.png");
 
 
@@ -169,6 +188,7 @@ public class GameScreen extends BaseScreen {
             for(int j=0; j<mapa.size();j++){
                 switch((int) mapa.get(i).get(j)){
                     case 0:{
+                        listaParedes.add(new ParedesEntidad(world, rockTexture, new Vector2(i,j)));
                         break;
                     }
                     case 1:{
@@ -202,6 +222,8 @@ public class GameScreen extends BaseScreen {
                                 break;
                             }
                         }
+                        controler.setPersonaje(personaje);
+                        controler.setTextoPer();
                         break;
                     }
                     case 4:{
@@ -213,7 +235,23 @@ public class GameScreen extends BaseScreen {
                         suelo.setPosition(i*PIXELS_IN_METERS, j*PIXELS_IN_METERS);
                         suelo.setSize(PIXELS_IN_METERS, PIXELS_IN_METERS);
                         listaSuelos.add(suelo);
-                        listaEnemigos.add(new EnemigoEntidad(world, slimeTexture, new Vector2(i, j)));
+                        switch (nivel){
+                            case 1:{
+                                listaEnemigos.add(new EnemigoEntidad(world, slimeTexture, new Vector2(i, j), 1));
+                                break;
+                            }
+                            default:{
+                                listaEnemigos.add(new EnemigoEntidad(world, goblinTexture, new Vector2(i, j), 2));
+                            }
+                        }
+                        break;
+                    }
+                    case 6:{
+                        Image suelo = new Image(new Texture("floor_1.png"));
+                        suelo.setPosition(i*PIXELS_IN_METERS, j*PIXELS_IN_METERS);
+                        suelo.setSize(PIXELS_IN_METERS, PIXELS_IN_METERS);
+                        listaSuelos.add(suelo);
+                        listaEnemigos.add(new EnemigoEntidad(world, eyeTexture, new Vector2(i, j), 3));
                         break;
                     }
                 }
@@ -229,7 +267,9 @@ public class GameScreen extends BaseScreen {
             stage.addActor(enemigo);
         }
         stage.addActor(personaje);
-        stage.addActor(escaleras);
+        if (nivel!=3){
+            stage.addActor(escaleras);
+        }
     }
 
     @Override
@@ -244,6 +284,7 @@ public class GameScreen extends BaseScreen {
             enemigo.detach();
             enemigo.remove();
         }
+        Gdx.input.setInputProcessor(null);
     }
 
     @Override
@@ -284,16 +325,27 @@ public class GameScreen extends BaseScreen {
             int y = (int) (Math.random()*(TAMAÑO_MAPA-10));
             int w = (int) (Math.random()*(9-5+1)+5);
             int h = (int) (Math.random()*(9-5+1)+5);
-            int s = 0;
-            int f = 0;
             Habitaciones hab = new Habitaciones(x, y, w, h);
-            if(cont == 1){
-                hab.setSpawner(true);
-            }else if (cont == 2){
-                hab.setFin(true);
-            } else if (cont > 2){
-                int numEn = (int) (Math.random()*3+1);
-                hab.setNumEn(numEn);
+            switch (cont){
+                case 1:{
+                    hab.setSpawner(true);
+                    break;
+                }
+                case 9:{
+                    switch (nivel){
+                        case 3:{
+                            hab.setJefe(true);
+                            break;
+                        }
+                        default:{
+                            hab.setFin(true);
+                        }
+                    }
+                }
+                default:{
+                    int numEn = (int) (Math.random()*3+1);
+                    hab.setNumEn(numEn);
+                }
             }
             if(habitaciones.size()>0){
                 for(int i=0; i<habitaciones.size();i++){
@@ -411,24 +463,36 @@ public class GameScreen extends BaseScreen {
     public void rellenarHabitaciones(){
         for(int i=0; i<habitaciones.size();i++){
             Habitaciones hab = habitaciones.get(i);
+            int[] centro = {(habitaciones.get(i).getX()+habitaciones.get(i).getW()/2), (habitaciones.get(i).getY()+habitaciones.get(i).getH()/2)};
             for(int j=0; j<mapa.size(); j++){
                 for(int k=0; k<mapa.size(); k++){
-                    if (i==0){
-                        if(k==hab.getX()+1 && j==hab.getY()+1){
-                            mapa.get(j).set(k, 3);
+                    switch (i){
+                        case 0:{
+                            if(k==hab.getX()+1 && j==hab.getY()+1){
+                                mapa.get(j).set(k, 3);
+                            }
+                            break;
                         }
-                    }
-                    else if (i==1){
-                        if (k==hab.getX()+1 && j==hab.getY()+1){
-                            mapa.get(j).set(k, 4);
+                        case 8:{
+                            if (hab.isFin()){
+                                if (k==hab.getX()+1 && j==hab.getY()+1){
+                                    mapa.get(j).set(k, 4);
+                                }
+                            }
+                            if (hab.isJefe()){
+                                if (k==centro[0] && j==centro[1]){
+                                    mapa.get(j).set(k, 6);
+                                }
+                            }
+                            break;
                         }
-                    }
-                    else if (i>1){
-                        for (int l=0; l<hab.getNumEn();l++){
-                            int eX = (int) (Math.random()*((hab.getX()+(hab.getW()-1))-(hab.getX()+1)+1)+(hab.getX()+1));
-                            int eY = (int) (Math.random()*((hab.getY()+(hab.getH()-1))-(hab.getY()+1)+1)+(hab.getY()+1));
-                            if(k==eX && j==eY){
-                                mapa.get(j).set(k, 5);
+                        default:{
+                            for (int l=0; l<hab.getNumEn();l++){
+                                int eX = (int) (Math.random()*((hab.getX()+(hab.getW()-1))-(hab.getX()+1)+1)+(hab.getX()+1));
+                                int eY = (int) (Math.random()*((hab.getY()+(hab.getH()-1))-(hab.getY()+1)+1)+(hab.getY()+1));
+                                if(k==eX && j==eY){
+                                    mapa.get(j).set(k, 5);
+                                }
                             }
                         }
                     }

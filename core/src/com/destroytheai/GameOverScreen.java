@@ -29,7 +29,7 @@ public class GameOverScreen extends BaseScreen{
         menu.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(game.gameScreen);
+                game.setScreen(game.menuScreen);
             }
         });
 
@@ -37,8 +37,8 @@ public class GameOverScreen extends BaseScreen{
         gameover.setSize(400,400);
         menu.setSize(200, 100);
         menu.setPosition(220, 50);
-        stage.addActor(menu);
         stage.addActor(gameover);
+        stage.addActor(menu);
     }
 
     @Override

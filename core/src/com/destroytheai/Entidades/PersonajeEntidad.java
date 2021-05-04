@@ -83,26 +83,7 @@ public class PersonajeEntidad extends Actor {
         this.texture=texture;
         this.setVivo(true);
 
-        switch (selecPer){
-            case 1:{
-                this.setVidaMax(VIDA_G);
-                this.setVida(VIDA_G);
-                this.setDaño(DAÑO_G);
-                break;
-            }
-            case 2:{
-                this.setVidaMax(VIDA_A);
-                this.setVida(VIDA_A);
-                this.setDaño(DAÑO_A);
-                break;
-            }
-            case 3:{
-                this.setVidaMax(VIDA_M);
-                this.setVida(VIDA_M);
-                this.setDaño(DAÑO_M);
-                break;
-            }
-        }
+        estadisticas(selecPer);
 
         BodyDef def = new BodyDef();
         def.position.set(position);
@@ -186,6 +167,29 @@ public class PersonajeEntidad extends Actor {
         this.setVida(this.getVida()-daño);
         if (this.getVida()<=0){
             this.setVivo(false);
+        }
+    }
+
+    public void estadisticas(int selecPer){
+        switch (selecPer){
+            case 1:{
+                this.setVidaMax(VIDA_G);
+                this.setVida(VIDA_G);
+                this.setDaño(DAÑO_G);
+                break;
+            }
+            case 2:{
+                this.setVidaMax(VIDA_A);
+                this.setVida(VIDA_A);
+                this.setDaño(DAÑO_A);
+                break;
+            }
+            case 3:{
+                this.setVidaMax(VIDA_M);
+                this.setVida(VIDA_M);
+                this.setDaño(DAÑO_M);
+                break;
+            }
         }
     }
 }

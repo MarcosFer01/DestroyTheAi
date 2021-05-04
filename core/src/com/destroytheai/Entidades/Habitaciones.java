@@ -7,6 +7,7 @@ public class Habitaciones {
     private int h;
     private boolean spawner;
     private boolean fin;
+    private boolean jefe;
     private int numEn;
 
     public Habitaciones(int x, int y, int w, int h){
@@ -65,5 +66,11 @@ public class Habitaciones {
     }
     public void setNumEn(int numEn) {
         this.numEn = numEn;
+    }
+    public boolean isJefe() {
+        return jefe;
+    }
+    public void setJefe(boolean jefe) {
+        this.jefe = jefe;
     }
 }

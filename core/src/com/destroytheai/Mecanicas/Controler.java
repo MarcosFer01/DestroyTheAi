@@ -19,11 +19,23 @@ public class Controler {
     Viewport viewport;
     Stage stage;
     boolean up, down, left, right;
+    Label vida;
+    Label oro;
+    private PersonajeEntidad personaje;
+
+    public void setPersonaje(PersonajeEntidad personaje) {
+        this.personaje = personaje;
+    }
 
     public Controler(){
         viewport = new FitViewport(640, 360);
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
+
+        vida = new Label("Vida: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        oro = new Label("Oro: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        vida.setPosition(10, 340);
+        oro.setPosition(10, 320);
 
         Image opciones = new Image(new Texture("opciones.png"));
         opciones.setSize(50,50);
@@ -31,7 +43,7 @@ public class Controler {
         opciones.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
+                System.out.println("Opciones");
                 return true;
             }
         });
@@ -105,12 +117,18 @@ public class Controler {
         stage.addActor(rightImg);
         stage.addActor(leftImg);
         stage.addActor(opciones);
+        stage.addActor(vida);
+        stage.addActor(oro);
     }
 
     public void draw(){
         stage.draw();
     }
 
+    public void setTextoPer(){
+        vida.setText("Vida: "+personaje.getVida()+"/"+personaje.getVidaMax());
+        oro.setText("Oro: "+personaje.getOro());
+    }
 
     public boolean isUp() {
         return up;
