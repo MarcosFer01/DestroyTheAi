@@ -19,8 +19,8 @@ public class OpcionesScreen extends BaseScreen {
     private Skin skin;
     private TextButton estadisticas;
     private TextButton atras;
-    private TextButton musicaBoton;
-    private TextButton sonidoBoton;
+    private TextButton playBoton;
+    private TextButton pausaBoton;
 
     public OpcionesScreen(final MainGame game) {
         super(game);
@@ -28,19 +28,18 @@ public class OpcionesScreen extends BaseScreen {
         stage = new Stage(new FitViewport(640, 360));
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
         Label musica = new Label("Música", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        Label sonido = new Label("Sonido", new Label.LabelStyle(new BitmapFont(),Color.WHITE));
         estadisticas = new TextButton("Estadísticas", skin);
         atras = new TextButton("Salir", skin);
-        musicaBoton = new TextButton("", skin, "toggle");
-        sonidoBoton = new TextButton("", skin, "toggle");
+        playBoton = new TextButton("Si", skin);
+        pausaBoton = new TextButton("No", skin);
 
-        musicaBoton.addCaptureListener(new ChangeListener() {
+        pausaBoton.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.menuScreen.getMusica().pause();
             }
         });
-        sonidoBoton.addCaptureListener(new ChangeListener() {
+        playBoton.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.menuScreen.getMusica().play();
@@ -59,24 +58,21 @@ public class OpcionesScreen extends BaseScreen {
             }
         });
 
-        musica.setPosition(60, 82);
-        sonido.setPosition(60, 226);
+        musica.setPosition(110, 216);
         musica.setFontScale(3.0f);
-        sonido.setFontScale(3.0f);
         estadisticas.setSize(200, 72);
         estadisticas.setPosition(380, 216);
         atras.setSize(200, 72);
         atras.setPosition(380, 72);
-        musicaBoton.setSize(40, 40);
-        musicaBoton.setPosition(220, 72);
-        sonidoBoton.setSize(40, 40);
-        sonidoBoton.setPosition(220, 216);
+        pausaBoton.setSize(60, 40);
+        pausaBoton.setPosition(60, 144);
+        playBoton.setSize(60, 40);
+        playBoton.setPosition(220, 144);
         stage.addActor(estadisticas);
         stage.addActor(atras);
         stage.addActor(musica);
-        stage.addActor(sonido);
-        stage.addActor(musicaBoton);
-        stage.addActor(sonidoBoton);
+        stage.addActor(pausaBoton);
+        stage.addActor(playBoton);
     }
 
     @Override

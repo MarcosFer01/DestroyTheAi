@@ -1,11 +1,14 @@
 package com.destroytheai;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -14,51 +17,33 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 public class EstadisticasScreen extends BaseScreen {
     private Stage stage;
     private Skin skin;
-    private TextButton nuevoJuego;
-    private TextButton cargarJuego;
-    private TextButton opciones;
+    private TextButton salir;
 
     public EstadisticasScreen(final MainGame game) {
         super(game);
 
         stage = new Stage(new FitViewport(640, 360));
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
-        Image title = new Image(new Texture("gameover.png"));
-        nuevoJuego = new TextButton("Nuevo Juego", skin);
-        cargarJuego = new TextButton("Cargar Juego", skin);
-        opciones = new TextButton("Opciones", skin);
+        Label Estadisticas = new Label("Partidas jugadas: 0" +
+                "\nPartidas completadas: 0" +
+                "\nEnemigos muertos: 0" +
+                "\nOro recogido: 0" +
+                "\nSanaciones usadas: 0", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        salir = new TextButton("Avanzar", skin);
 
-        nuevoJuego.addCaptureListener(new ChangeListener() {
+        salir.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(game.gameScreen);
-            }
-        });
-        cargarJuego.addCaptureListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(game.gameScreen);
-            }
-        });
-        opciones.addCaptureListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(game.gameScreen);
+                game.setScreen(game.opcionesScreen);
             }
         });
 
-        title.setPosition(320 - title.getWidth(), 320 - title.getHeight());
-        title.setSize(100,100);
-        nuevoJuego.setSize(200, 100);
-        nuevoJuego.setPosition(20, 50);
-        cargarJuego.setSize(200, 100);
-        cargarJuego.setPosition(220, 50);
-        opciones.setSize(200, 100);
-        opciones.setPosition(420, 50);
-        stage.addActor(title);
-        stage.addActor(nuevoJuego);
-        stage.addActor(cargarJuego);
-        stage.addActor(opciones);
+        Estadisticas.setPosition(240, 170);
+        Estadisticas.setFontScale(1.10f);
+        salir.setSize(100, 50);
+        salir.setPosition(270, 50);
+        stage.addActor(Estadisticas);
+        stage.addActor(salir);
     }
 
     @Override

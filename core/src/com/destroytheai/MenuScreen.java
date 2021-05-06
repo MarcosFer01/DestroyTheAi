@@ -37,7 +37,7 @@ public class MenuScreen extends BaseScreen {
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
         Image title = new Image(new Texture("logoE.png"));
         nuevoJuego = new TextButton("Nuevo Juego", skin);
-        cargarJuego = new TextButton("Cargar Juego", skin);
+        cargarJuego = new TextButton("Prueba", skin);
         opciones = new TextButton("Opciones", skin);
 
         nuevoJuego.addCaptureListener(new ChangeListener() {
