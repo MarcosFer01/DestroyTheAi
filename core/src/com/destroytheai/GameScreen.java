@@ -1,6 +1,7 @@
 package com.destroytheai;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
@@ -15,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.destroytheai.Entidades.EnemigoEntidad;
 import com.destroytheai.Entidades.Habitaciones;
+import com.destroytheai.Entidades.NpcEntidad;
 import com.destroytheai.Entidades.ParedesEntidad;
 import com.destroytheai.Entidades.PersonajeEntidad;
 import com.destroytheai.Entidades.SuelosEntidad;
@@ -34,14 +36,31 @@ public class GameScreen extends BaseScreen {
     private int nivel;
     private PersonajeEntidad personaje;
     private SuelosEntidad escaleras;
+    private NpcEntidad npc;
     private List<ArrayList> mapa = new ArrayList<ArrayList>();
     private ArrayList<Habitaciones> habitaciones = new ArrayList<Habitaciones>();
     private List<ParedesEntidad> listaParedes = new ArrayList<ParedesEntidad>();
     private List<Image> listaSuelos = new ArrayList<Image>();
     private List<EnemigoEntidad> listaEnemigos = new ArrayList<EnemigoEntidad>();
 
+    private Sound cura, moneda, jefeM, magoA, goblinM, slimeM, ataque;
+
+    public PersonajeEntidad getPersonaje() {
+        return personaje;
+    }
+
+
     public GameScreen(final MainGame game, int piso) {
         super(game);
+
+        cura = game.getManager().get("bubble2.ogg");
+        moneda = game.getManager().get("coin.ogg");
+        jefeM = game.getManager().get("giant5.ogg");
+        magoA = game.getManager().get("magic.ogg");
+        goblinM = game.getManager().get("ogre2.ogg");
+        slimeM = game.getManager().get("slime8.ogg");
+        ataque = game.getManager().get("swing.ogg");
+
         nivel=piso;
         stage = new Stage(new FitViewport(640, 360));
         world = new World(new Vector2(0, 0), true);
@@ -57,7 +76,6 @@ public class GameScreen extends BaseScreen {
             @Override
             public void beginContact(Contact contact) {
                 if(hayColision(contact, "player", "floor")){
-                    System.out.println("fin piso");
                     stage.addAction(
                             Actions.sequence(
                                     Actions.delay(1.5f),
@@ -66,10 +84,10 @@ public class GameScreen extends BaseScreen {
                                         @Override
                                         public void run() {
                                             switch (nivel){
-                                                case 1:{
+                                                case 2:{
                                                     game.setScreen(new GameScreen(game, 2));
                                                 }
-                                                case 2:{
+                                                case 1:{
                                                     game.setScreen(new GameScreen(game, 3));
                                                 }
                                             }
@@ -79,8 +97,33 @@ public class GameScreen extends BaseScreen {
                             )
                     );
                 }
+                if(hayColision(contact, "player", "medic")){
+                    System.out.println("medico");
+                    if (personaje.getOro()>10 && personaje.getVida()<personaje.getVidaMax()){
+                        personaje.curar();
+                        controler.setTextoPer();
+                        stage.addAction(
+                                Actions.sequence(
+                                        Actions.run(new Runnable(){
+
+                                            @Override
+                                            public void run() {
+                                                moneda.play();
+                                            }
+                                        }),
+                                        Actions.delay(0.5f),
+                                        Actions.run(new Runnable(){
+
+                                            @Override
+                                            public void run() {
+                                                cura.play();
+                                            }
+                                        })
+                                )
+                        );
+                    }
+                }
                 if(hayColision(contact, "player", "enemy")){
-                    System.out.println("Ejecutando combate");
                     if (contact.getFixtureB().getUserData().equals("enemy")){
                         Vector2 pos1 = contact.getFixtureB().getBody().getPosition();
                         pos1.set(pos1.x*PIXELS_IN_METERS, pos1.y*PIXELS_IN_METERS);
@@ -89,13 +132,62 @@ public class GameScreen extends BaseScreen {
                             Vector2 pos2 = new Vector2(listaEnemigos.get(i).getX(), listaEnemigos.get(i).getY());
                             pos2.set((int) pos2.x, (int) pos2.y);
                             if (pos1.equals(pos2)){
-                                System.out.println("Enemigo detectado");
                                 listaEnemigos.get(i).recibirDaño(personaje.getDaño());
-                                personaje.recibirDaño(listaEnemigos.get(i).getDaño());
+                                switch (personaje.getId()){
+                                    case 3:{
+                                        magoA.play();
+                                        break;
+                                    }
+                                    default:{
+                                        ataque.play();
+                                    }
+                                }
+                                if (listaEnemigos.get(i).isVivo()==false){
+                                    if (listaEnemigos.get(i).isJefe()){
+                                        stage.addAction(
+                                                Actions.sequence(
+                                                        Actions.run(new Runnable(){
+
+                                                            @Override
+                                                            public void run() {
+                                                                jefeM.play();
+                                                            }
+                                                        }),
+                                                        Actions.delay(1f),
+                                                        Actions.run(new Runnable(){
+
+                                                            @Override
+                                                            public void run() {
+                                                                game.setScreen(game.cinematica2screen);
+                                                            }
+                                                        })
+                                                )
+                                        );
+                                    } else{
+                                        switch (listaEnemigos.get(i).getId()){
+                                            case 1:{
+                                                slimeM.play();
+                                                break;
+                                            }
+                                            case 2:{
+                                                goblinM.play();
+                                                break;
+                                            }
+                                        }
+                                        int oro = (int) (Math.random()*7+3);
+                                        listaEnemigos.get(i).remove();
+                                        listaEnemigos.remove(i);
+                                        personaje.setOro(personaje.getOro()+oro);
+                                        controler.setTextoPer();
+                                    }
+                                } else{
+                                    personaje.recibirDaño(listaEnemigos.get(i).getDaño());
+                                    controler.setTextoPer();
+                                }
                                 if(personaje.isVivo()==false){
                                     stage.addAction(
                                             Actions.sequence(
-                                                    Actions.delay(1.5f),
+                                                    Actions.delay(1f),
                                                     Actions.run(new Runnable(){
 
                                                         @Override
@@ -105,13 +197,6 @@ public class GameScreen extends BaseScreen {
                                                     })
                                             )
                                     );
-                                }
-                                if (listaEnemigos.get(i).isVivo()==false){
-                                    int oro = (int) (Math.random()*7+3);
-                                    listaEnemigos.get(i).remove();
-                                    listaEnemigos.remove(i);
-                                    personaje.setOro(personaje.getOro()+oro);
-                                    controler.setTextoPer();
                                 }
                             }
                         }
@@ -123,9 +208,58 @@ public class GameScreen extends BaseScreen {
                             Vector2 pos2 = new Vector2(listaEnemigos.get(i).getX(), listaEnemigos.get(i).getY());
                             pos2.set((int) pos2.x, (int) pos2.y);
                             if (pos1.equals(pos2)){
-                                System.out.println("Enemigo detectado");
                                 listaEnemigos.get(i).recibirDaño(personaje.getDaño());
-                                personaje.recibirDaño(listaEnemigos.get(i).getDaño());
+                                switch (personaje.getId()){
+                                    case 3:{
+                                        magoA.play();
+                                        break;
+                                    }
+                                    default:{
+                                        ataque.play();
+                                    }
+                                }
+                                if (listaEnemigos.get(i).isVivo()==false){
+                                    if (listaEnemigos.get(i).isJefe()){
+                                        stage.addAction(
+                                                Actions.sequence(
+                                                        Actions.run(new Runnable(){
+
+                                                            @Override
+                                                            public void run() {
+                                                                jefeM.play();
+                                                            }
+                                                        }),
+                                                        Actions.delay(1f),
+                                                        Actions.run(new Runnable(){
+
+                                                            @Override
+                                                            public void run() {
+                                                                game.setScreen(game.cinematica2screen);
+                                                            }
+                                                        })
+                                                )
+                                        );
+                                    } else{
+                                        switch (listaEnemigos.get(i).getId()){
+                                            case 1:{
+                                                slimeM.play();
+                                                break;
+                                            }
+                                            case 2:{
+                                                goblinM.play();
+                                                break;
+                                            }
+                                        }
+                                        int oro = (int) (Math.random()*7+3);
+                                        listaEnemigos.get(i).remove();
+                                        listaEnemigos.remove(i);
+                                        personaje.setOro(personaje.getOro()+oro);
+                                        controler.setTextoPer();
+                                    }
+                                } else{
+                                    personaje.recibirDaño(listaEnemigos.get(i).getDaño());
+                                    controler.setTextoPer();
+                                }
                                 if(personaje.isVivo()==false){
                                     stage.addAction(
                                             Actions.sequence(
@@ -140,13 +274,7 @@ public class GameScreen extends BaseScreen {
                                             )
                                     );
                                 }
-                                if (listaEnemigos.get(i).isVivo()==false){
-                                    int oro = (int) (Math.random()*7+3);
-                                    listaEnemigos.get(i).remove();
-                                    listaEnemigos.remove(i);
-                                    personaje.setOro(personaje.getOro()+oro);
-                                    controler.setTextoPer();
-                                }
+
                             }
                         }
                     }
@@ -182,6 +310,7 @@ public class GameScreen extends BaseScreen {
         Texture goblinTexture = game.getManager().get("goblin_idle_anim_f0.png");
         Texture eyeTexture = game.getManager().get("fly_anim_f1.png");
         Texture stairsTexture = game.getManager().get("stair_nextlevel.png");
+        Texture medicTexture = game.getManager().get("medic.png");
 
 
         for(int i=0; i<mapa.size(); i++){
@@ -222,6 +351,7 @@ public class GameScreen extends BaseScreen {
                                 break;
                             }
                         }
+                        personaje.setOro(game.gameScreen.getPersonaje().getOro());
                         controler.setPersonaje(personaje);
                         controler.setTextoPer();
                         break;
@@ -254,6 +384,13 @@ public class GameScreen extends BaseScreen {
                         listaEnemigos.add(new EnemigoEntidad(world, eyeTexture, new Vector2(i, j), 3));
                         break;
                     }
+                    case 7:{
+                        Image suelo = new Image(new Texture("floor_1.png"));
+                        suelo.setPosition(i*PIXELS_IN_METERS, j*PIXELS_IN_METERS);
+                        suelo.setSize(PIXELS_IN_METERS, PIXELS_IN_METERS);
+                        listaSuelos.add(suelo);
+                        npc = new NpcEntidad(world, medicTexture, new Vector2(i, j));
+                    }
                 }
             }
         }
@@ -270,6 +407,7 @@ public class GameScreen extends BaseScreen {
         if (nivel!=3){
             stage.addActor(escaleras);
         }
+        stage.addActor(npc);
     }
 
     @Override
@@ -284,6 +422,8 @@ public class GameScreen extends BaseScreen {
             enemigo.detach();
             enemigo.remove();
         }
+        npc.detach();
+        npc.remove();
         Gdx.input.setInputProcessor(null);
     }
 
@@ -470,6 +610,9 @@ public class GameScreen extends BaseScreen {
                         case 0:{
                             if(k==hab.getX()+1 && j==hab.getY()+1){
                                 mapa.get(j).set(k, 3);
+                            }
+                            if (k==hab.getX()+1 && j==(hab.getY()+hab.getH()-1)){
+                                mapa.get(j).set(k,7);
                             }
                             break;
                         }

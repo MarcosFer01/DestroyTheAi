@@ -5,22 +5,30 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.destroytheai.Entidades.PersonajeEntidad;
+import com.destroytheai.MainGame;
 
 public class Controler {
     Viewport viewport;
     Stage stage;
+    private Skin skin;
     boolean up, down, left, right;
     Label vida;
     Label oro;
+    private TextButton menuPausa;
     private PersonajeEntidad personaje;
 
     public void setPersonaje(PersonajeEntidad personaje) {
@@ -31,6 +39,23 @@ public class Controler {
         viewport = new FitViewport(640, 360);
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
+        skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
+
+        menuPausa = new TextButton("Nuevo Juego", skin);
+
+        menuPausa.addCaptureListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.exit();
+            }
+        });
+
+        final Table pause = new Table();
+        pause.add(new Label("Menu de pausa: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE)));
+        pause.row();
+        pause.add(menuPausa);
+        pause.center();
+        pause.setVisible(false);
 
         vida = new Label("Vida: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         oro = new Label("Oro: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
@@ -43,7 +68,8 @@ public class Controler {
         opciones.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("Opciones");
+                System.out.println("opciones");
+                pause.setVisible(true);
                 return true;
             }
         });
@@ -119,6 +145,7 @@ public class Controler {
         stage.addActor(opciones);
         stage.addActor(vida);
         stage.addActor(oro);
+        stage.addActor(pause);
     }
 
     public void draw(){

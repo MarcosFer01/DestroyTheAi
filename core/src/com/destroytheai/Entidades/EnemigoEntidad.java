@@ -29,11 +29,25 @@ public class EnemigoEntidad extends Actor {
     private World world;
     private Body body;
     private Fixture fixture;
+    private int id;
     private int vida;
     private int daño;
     private boolean vivo;
     private boolean movimiento = false;
+    private boolean jefe = false;
 
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
+    public boolean isJefe() {
+        return jefe;
+    }
+    public void setJefe(boolean jefe) {
+        this.jefe = jefe;
+    }
     public int getVida() {
         return vida;
     }
@@ -59,6 +73,20 @@ public class EnemigoEntidad extends Actor {
         this.setVivo(true);
 
         estadisticas(selecEne);
+        switch (selecEne){
+            case 1:{
+                this.setId(1);
+                break;
+            }
+            case 2:{
+                this.setId(2);
+                break;
+            }
+            case 3:{
+                this.setJefe(true);
+                break;
+            }
+        }
 
         BodyDef def = new BodyDef();
         def.position.set(position);

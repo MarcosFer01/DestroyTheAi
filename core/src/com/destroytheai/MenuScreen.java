@@ -1,6 +1,7 @@
 package com.destroytheai;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -18,9 +19,19 @@ public class MenuScreen extends BaseScreen {
     private TextButton nuevoJuego;
     private TextButton cargarJuego;
     private TextButton opciones;
+    private Music musica;
+
+    public Music getMusica() {
+        return musica;
+    }
+    public void setMusica(Music musica) {
+        this.musica = musica;
+    }
 
     public MenuScreen(final MainGame game) {
         super(game);
+
+        musica = game.getManager().get("musica.ogg");
 
         stage = new Stage(new FitViewport(640, 360));
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
@@ -38,7 +49,7 @@ public class MenuScreen extends BaseScreen {
         cargarJuego.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(game.gameOverScreen);
+                game.setScreen(game.cinematica2screen);
             }
         });
         opciones.addCaptureListener(new ChangeListener() {
@@ -65,6 +76,9 @@ public class MenuScreen extends BaseScreen {
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
+        musica.setVolume(0.75f);
+        musica.setLooping(true);
+        musica.play();
     }
 
     @Override

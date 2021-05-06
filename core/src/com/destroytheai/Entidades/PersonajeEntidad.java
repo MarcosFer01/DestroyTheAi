@@ -25,7 +25,7 @@ public class PersonajeEntidad extends Actor {
     private World world;
     private Body body;
     private Fixture fixture;
-    private Vector2 position;
+    private int id;
     private int vida;
     private int vidaMax;
     private int oro = 0;
@@ -35,6 +35,12 @@ public class PersonajeEntidad extends Actor {
     private boolean vivo = true;
     Controler controler = new Controler();
 
+    public int getId() {
+        return id;
+    }
+    public void setId(int id) {
+        this.id = id;
+    }
     public int getVida() {
         return vida;
     }
@@ -84,6 +90,20 @@ public class PersonajeEntidad extends Actor {
         this.setVivo(true);
 
         estadisticas(selecPer);
+        switch (selecPer){
+            case 1:{
+                this.setId(1);
+                break;
+            }
+            case 2:{
+                this.setId(2);
+                break;
+            }
+            case 3:{
+                this.setId(3);
+                break;
+            }
+        }
 
         BodyDef def = new BodyDef();
         def.position.set(position);
@@ -168,6 +188,11 @@ public class PersonajeEntidad extends Actor {
         if (this.getVida()<=0){
             this.setVivo(false);
         }
+    }
+
+    public void curar(){
+        this.setVida(this.getVidaMax());
+        this.setOro(this.getOro()-10);
     }
 
     public void estadisticas(int selecPer){

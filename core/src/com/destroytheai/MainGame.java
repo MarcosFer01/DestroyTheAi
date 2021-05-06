@@ -2,6 +2,8 @@ package com.destroytheai;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 
 public class MainGame extends Game {
@@ -15,6 +17,8 @@ public class MainGame extends Game {
 	public PersonajesScreen personajesScreen;
 	public OpcionesScreen opcionesScreen;
 	public EstadisticasScreen estadisticasScreen;
+	public Cinematica1Screen cinematica1screen;
+	public Cinematica2Screen cinematica2screen;
 
 	public AssetManager getManager() {
 		return manager;
@@ -28,12 +32,22 @@ public class MainGame extends Game {
 		manager.load("wizzard_f_hit_anim_f0.png", Texture.class);
 		manager.load("slime_idle_anim_f0.png", Texture.class);
 		manager.load("goblin_idle_anim_f0.png", Texture.class);
+		manager.load("medic.png", Texture.class);
 		manager.load("fly_anim_f1.png", Texture.class);
 		manager.load("floor_1.png", Texture.class);
 		manager.load("floor_5.png", Texture.class);
 		manager.load("wall_1.png", Texture.class);
 		manager.load("gameover.png", Texture.class);
 		manager.load("stair_nextlevel.png", Texture.class);
+
+		manager.load("bubble2.ogg", Sound.class);
+		manager.load("coin.ogg", Sound.class);
+		manager.load("giant5.ogg", Sound.class);
+		manager.load("magic.ogg", Sound.class);
+		manager.load("ogre2.ogg", Sound.class);
+		manager.load("slime8.ogg", Sound.class);
+		manager.load("swing.ogg", Sound.class);
+		manager.load("musica.ogg", Music.class);
 
 		loadingScreen = new LoadingScreen(this);
 		setScreen(loadingScreen);
@@ -45,6 +59,8 @@ public class MainGame extends Game {
 		gameOverScreen = new GameOverScreen(this);
 		opcionesScreen = new OpcionesScreen(this);
 		estadisticasScreen = new EstadisticasScreen(this);
+		cinematica1screen = new Cinematica1Screen(this);
+		cinematica2screen = new Cinematica2Screen(this);
 
 		menuScreen = new MenuScreen(this);
 		setScreen(menuScreen);

@@ -34,6 +34,18 @@ public class OpcionesScreen extends BaseScreen {
         musicaBoton = new TextButton("", skin, "toggle");
         sonidoBoton = new TextButton("", skin, "toggle");
 
+        musicaBoton.addCaptureListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.menuScreen.getMusica().pause();
+            }
+        });
+        sonidoBoton.addCaptureListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.menuScreen.getMusica().play();
+            }
+        });
         estadisticas.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

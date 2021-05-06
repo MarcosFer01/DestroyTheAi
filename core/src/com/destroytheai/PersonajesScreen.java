@@ -50,21 +50,21 @@ public class PersonajesScreen extends BaseScreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 selecPer=1;
-                game.setScreen(game.gameScreen);
+                game.setScreen(game.cinematica1screen);
             }
         });
         aseSel.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 selecPer=2;
-                game.setScreen(game.gameScreen);
+                game.setScreen(game.cinematica1screen);
             }
         });
         magSel.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 selecPer=3;
-                game.setScreen(game.gameScreen);
+                game.setScreen(game.cinematica1screen);
             }
         });
 
