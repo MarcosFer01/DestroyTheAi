@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
@@ -65,7 +66,7 @@ public class GameScreen extends BaseScreen {
         stage = new Stage(new FitViewport(640, 360));
         world = new World(new Vector2(0, 0), true);
         crearPiso();
-        controler = new Controler();
+        controler = new Controler(game);
         world.setContactListener(new ContactListener() {
 
             private boolean hayColision(Contact contact, Object userA, Object userB){
@@ -76,30 +77,23 @@ public class GameScreen extends BaseScreen {
             @Override
             public void beginContact(Contact contact) {
                 if(hayColision(contact, "player", "floor")){
+                    game.estadisticasScreen.setPartJug(game.estadisticasScreen.getPartJug()+1);
                     stage.addAction(
                             Actions.sequence(
-                                    Actions.delay(1.5f),
+                                    Actions.delay(0.5f),
                                     Actions.run(new Runnable(){
 
                                         @Override
                                         public void run() {
-                                            switch (nivel){
-                                                case 2:{
-                                                    game.setScreen(new GameScreen(game, 2));
-                                                }
-                                                case 1:{
-                                                    game.setScreen(new GameScreen(game, 3));
-                                                }
-                                            }
-
+                                            game.setScreen(new GameScreen(game, 3));
                                         }
                                     })
                             )
                     );
                 }
                 if(hayColision(contact, "player", "medic")){
-                    System.out.println("medico");
                     if (personaje.getOro()>10 && personaje.getVida()<personaje.getVidaMax()){
+                        game.estadisticasScreen.setCuras(game.estadisticasScreen.getCuras()+1);
                         personaje.curar();
                         controler.setTextoPer();
                         stage.addAction(
@@ -144,6 +138,9 @@ public class GameScreen extends BaseScreen {
                                 }
                                 if (listaEnemigos.get(i).isVivo()==false){
                                     if (listaEnemigos.get(i).isJefe()){
+                                        game.estadisticasScreen.setPartComp(game.estadisticasScreen.getPartComp()+1);
+                                        game.estadisticasScreen.setEneM(game.estadisticasScreen.getEneM()+1);
+                                        game.estadisticasScreen.sobreescribirDatos();
                                         stage.addAction(
                                                 Actions.sequence(
                                                         Actions.run(new Runnable(){
@@ -175,6 +172,15 @@ public class GameScreen extends BaseScreen {
                                             }
                                         }
                                         int oro = (int) (Math.random()*7+3);
+                                        final Body toRemove = contact.getFixtureB().getBody();
+                                                Gdx.app.postRunnable(new Runnable() {
+                                                @Override
+                                                public void run () {
+                                                    world.destroyBody(toRemove);
+                                                }
+                                            });
+                                        game.estadisticasScreen.setEneM(game.estadisticasScreen.getEneM()+1);
+                                        game.estadisticasScreen.setOroR(game.estadisticasScreen.getOroR()+oro);
                                         listaEnemigos.get(i).remove();
                                         listaEnemigos.remove(i);
                                         personaje.setOro(personaje.getOro()+oro);
@@ -185,6 +191,7 @@ public class GameScreen extends BaseScreen {
                                     controler.setTextoPer();
                                 }
                                 if(personaje.isVivo()==false){
+                                    game.estadisticasScreen.sobreescribirDatos();
                                     stage.addAction(
                                             Actions.sequence(
                                                     Actions.delay(1f),
@@ -220,6 +227,9 @@ public class GameScreen extends BaseScreen {
                                 }
                                 if (listaEnemigos.get(i).isVivo()==false){
                                     if (listaEnemigos.get(i).isJefe()){
+                                        game.estadisticasScreen.setPartComp(game.estadisticasScreen.getPartComp()+1);
+                                        game.estadisticasScreen.setEneM(game.estadisticasScreen.getEneM()+1);
+                                        game.estadisticasScreen.sobreescribirDatos();
                                         stage.addAction(
                                                 Actions.sequence(
                                                         Actions.run(new Runnable(){
@@ -251,6 +261,15 @@ public class GameScreen extends BaseScreen {
                                             }
                                         }
                                         int oro = (int) (Math.random()*7+3);
+                                        final Body toRemove = contact.getFixtureA().getBody();
+                                        Gdx.app.postRunnable(new Runnable() {
+                                            @Override
+                                            public void run () {
+                                                world.destroyBody(toRemove);
+                                            }
+                                        });
+                                        game.estadisticasScreen.setEneM(game.estadisticasScreen.getEneM()+1);
+                                        game.estadisticasScreen.setOroR(game.estadisticasScreen.getOroR()+oro);
                                         listaEnemigos.get(i).remove();
                                         listaEnemigos.remove(i);
                                         personaje.setOro(personaje.getOro()+oro);
@@ -261,6 +280,7 @@ public class GameScreen extends BaseScreen {
                                     controler.setTextoPer();
                                 }
                                 if(personaje.isVivo()==false){
+                                    game.estadisticasScreen.sobreescribirDatos();
                                     stage.addAction(
                                             Actions.sequence(
                                                     Actions.delay(1.5f),
@@ -311,6 +331,7 @@ public class GameScreen extends BaseScreen {
         Texture eyeTexture = game.getManager().get("fly_anim_f1.png");
         Texture stairsTexture = game.getManager().get("stair_nextlevel.png");
         Texture medicTexture = game.getManager().get("medic.png");
+        Texture keyTexture = game.getManager().get("key_silver.png");
 
 
         for(int i=0; i<mapa.size(); i++){
@@ -339,15 +360,15 @@ public class GameScreen extends BaseScreen {
                         int selecPer = game.personajesScreen.getSelecPer();
                         switch (selecPer){
                             case 1:{
-                                personaje = new PersonajeEntidad(world, cabTexture, new Vector2(i, j), 1);
+                                personaje = new PersonajeEntidad(world, cabTexture, new Vector2(i, j), 1, game);
                                 break;
                             }
                             case 2:{
-                                personaje = new PersonajeEntidad(world, aseTexture, new Vector2(i, j), 2);
+                                personaje = new PersonajeEntidad(world, aseTexture, new Vector2(i, j), 2, game);
                                 break;
                             }
                             case 3:{
-                                personaje = new PersonajeEntidad(world, magTexture, new Vector2(i, j), 3);
+                                personaje = new PersonajeEntidad(world, magTexture, new Vector2(i, j), 3, game);
                                 break;
                             }
                         }
@@ -390,6 +411,7 @@ public class GameScreen extends BaseScreen {
                         suelo.setSize(PIXELS_IN_METERS, PIXELS_IN_METERS);
                         listaSuelos.add(suelo);
                         npc = new NpcEntidad(world, medicTexture, new Vector2(i, j));
+                        break;
                     }
                 }
             }
@@ -414,6 +436,9 @@ public class GameScreen extends BaseScreen {
     public void hide() {
         personaje.detach();
         personaje.remove();
+        for(Image suelo : listaSuelos){
+            suelo.remove();
+        }
         for(ParedesEntidad pared : listaParedes){
             pared.detach();
             pared.remove();
@@ -439,8 +464,6 @@ public class GameScreen extends BaseScreen {
         stage.draw();
         controler.draw();
     }
-
-
 
     @Override
     public void dispose() {
@@ -481,6 +504,7 @@ public class GameScreen extends BaseScreen {
                             hab.setFin(true);
                         }
                     }
+                    break;
                 }
                 default:{
                     int numEn = (int) (Math.random()*3+1);

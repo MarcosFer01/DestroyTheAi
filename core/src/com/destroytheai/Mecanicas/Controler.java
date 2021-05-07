@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -19,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.destroytheai.Entidades.PersonajeEntidad;
+import com.destroytheai.GameScreen;
 import com.destroytheai.MainGame;
 
 public class Controler {
@@ -28,48 +30,35 @@ public class Controler {
     boolean up, down, left, right;
     Label vida;
     Label oro;
-    private TextButton menuPausa;
+    Label medico;
+    Label llave;
     private PersonajeEntidad personaje;
 
     public void setPersonaje(PersonajeEntidad personaje) {
         this.personaje = personaje;
     }
 
-    public Controler(){
+    public Controler(final MainGame game){
         viewport = new FitViewport(640, 360);
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
-        menuPausa = new TextButton("Nuevo Juego", skin);
-
-        menuPausa.addCaptureListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                Gdx.app.exit();
-            }
-        });
-
-        final Table pause = new Table();
-        pause.add(new Label("Menu de pausa: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE)));
-        pause.row();
-        pause.add(menuPausa);
-        pause.center();
-        pause.setVisible(false);
-
         vida = new Label("Vida: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         oro = new Label("Oro: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        medico = new Label("Debería ir a ver al médico", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         vida.setPosition(10, 340);
         oro.setPosition(10, 320);
+        medico.setPosition(260,340);
+        medico.setVisible(false);
 
-        Image opciones = new Image(new Texture("opciones.png"));
+        Image opciones = new Image(new Texture("menu.png"));
         opciones.setSize(50,50);
         opciones.setPosition(590, 310);
         opciones.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("opciones");
-                pause.setVisible(true);
+                Gdx.app.exit();
                 return true;
             }
         });
@@ -145,7 +134,7 @@ public class Controler {
         stage.addActor(opciones);
         stage.addActor(vida);
         stage.addActor(oro);
-        stage.addActor(pause);
+        stage.addActor(medico);
     }
 
     public void draw(){
@@ -153,7 +142,16 @@ public class Controler {
     }
 
     public void setTextoPer(){
-        vida.setText("Vida: "+personaje.getVida()+"/"+personaje.getVidaMax());
+        if (personaje.getVida()<5){
+            medico.setVisible(true);
+        } else{
+            medico.setVisible(false);
+        }
+        if (personaje.getVida()<0){
+            vida.setText("Vida: "+0+"/"+personaje.getVidaMax());
+        } else{
+            vida.setText("Vida: "+personaje.getVida()+"/"+personaje.getVidaMax());
+        }
         oro.setText("Oro: "+personaje.getOro());
     }
 

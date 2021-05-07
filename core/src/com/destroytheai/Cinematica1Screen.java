@@ -38,7 +38,7 @@ public class Cinematica1Screen extends BaseScreen {
             }
         });
 
-        historia.setPosition(50, 125);
+        historia.setPosition(50, 120);
         avanzar.setSize(100, 50);
         avanzar.setPosition(270, 50);
         stage.addActor(historia);

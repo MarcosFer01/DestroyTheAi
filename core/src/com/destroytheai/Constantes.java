@@ -21,7 +21,7 @@ public class Constantes {
 
     //Constantes de Enemigos
     //Constantes del slime
-    public static final int VIDA_S = 2;
+    public static final int VIDA_S = 3;
     public static final int DAÑO_S = 2;
 
     //Constantes del goblin

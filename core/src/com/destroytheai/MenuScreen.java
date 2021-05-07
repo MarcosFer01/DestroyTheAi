@@ -17,39 +17,32 @@ public class MenuScreen extends BaseScreen {
     private Stage stage;
     private Skin skin;
     private TextButton nuevoJuego;
-    private TextButton cargarJuego;
     private TextButton opciones;
     private Music musica;
+    private boolean music = true;
 
     public Music getMusica() {
         return musica;
     }
-    public void setMusica(Music musica) {
-        this.musica = musica;
+    public void setMusic(boolean music) {
+        this.music = music;
     }
 
     public MenuScreen(final MainGame game) {
         super(game);
-
+        System.out.println(game.estadisticasScreen.getEneM());
         musica = game.getManager().get("musica.ogg");
 
         stage = new Stage(new FitViewport(640, 360));
         skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
         Image title = new Image(new Texture("logoE.png"));
         nuevoJuego = new TextButton("Nuevo Juego", skin);
-        cargarJuego = new TextButton("Prueba", skin);
         opciones = new TextButton("Opciones", skin);
 
         nuevoJuego.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.setScreen(game.personajesScreen);
-            }
-        });
-        cargarJuego.addCaptureListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                game.setScreen(game.cinematica2screen);
             }
         });
         opciones.addCaptureListener(new ChangeListener() {
@@ -62,23 +55,24 @@ public class MenuScreen extends BaseScreen {
         title.setSize(340,50);
         title.setPosition(150, 250);
         nuevoJuego.setSize(200, 100);
-        nuevoJuego.setPosition(20, 50);
-        cargarJuego.setSize(200, 100);
-        cargarJuego.setPosition(220, 50);
+        nuevoJuego.setPosition(60, 50);
         opciones.setSize(200, 100);
-        opciones.setPosition(420, 50);
+        opciones.setPosition(380, 50);
         stage.addActor(title);
         stage.addActor(nuevoJuego);
-        stage.addActor(cargarJuego);
         stage.addActor(opciones);
     }
 
     @Override
     public void show() {
         Gdx.input.setInputProcessor(stage);
-        musica.setVolume(0.75f);
-        musica.setLooping(true);
-        musica.play();
+        if(music){
+            musica.setVolume(0.75f);
+            musica.setLooping(true);
+            musica.play();
+        } else {
+            musica.stop();
+        }
     }
 
     @Override

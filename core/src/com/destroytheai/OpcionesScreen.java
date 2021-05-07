@@ -36,18 +36,21 @@ public class OpcionesScreen extends BaseScreen {
         pausaBoton.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.menuScreen.getMusica().pause();
+                game.menuScreen.setMusic(false);
+                game.menuScreen.getMusica().stop();
             }
         });
         playBoton.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                game.menuScreen.setMusic(true);
                 game.menuScreen.getMusica().play();
             }
         });
         estadisticas.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                game.estadisticasScreen.actualizarEstadisticas();
                 game.setScreen(game.estadisticasScreen);
             }
         });

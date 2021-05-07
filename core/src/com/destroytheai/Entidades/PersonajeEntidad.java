@@ -1,5 +1,6 @@
 package com.destroytheai.Entidades;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Vector2;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.destroytheai.MainGame;
 import com.destroytheai.Mecanicas.Controler;
 
 import static com.destroytheai.Constantes.DAÑO_A;
@@ -33,7 +35,8 @@ public class PersonajeEntidad extends Actor {
     private boolean movimiento = true;
     private boolean colision = false;
     private boolean vivo = true;
-    Controler controler = new Controler();
+    MainGame game;
+    Controler controler;
 
     public int getId() {
         return id;
@@ -84,26 +87,15 @@ public class PersonajeEntidad extends Actor {
         this.daño = daño;
     }
 
-    public PersonajeEntidad(World world, Texture texture, Vector2 position, int selecPer){
+    public PersonajeEntidad(World world, Texture texture, Vector2 position, int selecPer, MainGame game){
         this.world=world;
         this.texture=texture;
         this.setVivo(true);
+        this.game=game;
+        controler = new Controler(game);
 
         estadisticas(selecPer);
-        switch (selecPer){
-            case 1:{
-                this.setId(1);
-                break;
-            }
-            case 2:{
-                this.setId(2);
-                break;
-            }
-            case 3:{
-                this.setId(3);
-                break;
-            }
-        }
+        this.setId(selecPer);
 
         BodyDef def = new BodyDef();
         def.position.set(position);
@@ -111,7 +103,7 @@ public class PersonajeEntidad extends Actor {
         body = world.createBody(def);
 
         PolygonShape box = new PolygonShape();
-        box.setAsBox(0.4f, 0.4f);
+        box.setAsBox(0.35f, 0.35f);
         fixture = body.createFixture(box, 1);
         fixture.setUserData("player");
         box.dispose();
@@ -161,19 +153,74 @@ public class PersonajeEntidad extends Actor {
         switch(dir){
             case 0:{
                 body.setLinearVelocity(0,8);
+                switch(id){
+                    case 1:{
+                        this.texture = game.getManager().get("knight_idle_anim_f0.png");
+                        break;
+                    }
+                    case 2:{
+                        this.texture = game.getManager().get("elf_f_hit_anim_f0.png");
+                        break;
+                    }
+                    case 3:{
+                        this.texture = game.getManager().get("wizzard_f_hit_anim_f0.png");
+                        break;
+                    }
+                }
                 break;
             }
             case 1:{
                 body.setLinearVelocity(8,0);
+                switch(id){
+                    case 1:{
+                        this.texture = game.getManager().get("knight_idle_anim_f0.png");
+                        break;
+                    }
+                    case 2:{
+                        this.texture = game.getManager().get("elf_f_hit_anim_f0.png");
+                        break;
+                    }
+                    case 3:{
+                        this.texture = game.getManager().get("wizzard_f_hit_anim_f0.png");
+                        break;
+                    }
+                }
                 break;
             }
             case 2:{
                 body.setLinearVelocity(0,-8);
+                switch(id){
+                    case 1:{
+                        this.texture = game.getManager().get("knight_idle_anim_f0R.png");
+                        break;
+                    }
+                    case 2:{
+                        this.texture = game.getManager().get("elf_f_hit_anim_f0R.png");
+                        break;
+                    }
+                    case 3:{
+                        this.texture = game.getManager().get("wizzard_f_hit_anim_f0R.png");
+                        break;
+                    }
+                }
                 break;
             }
             case 3:{
                 body.setLinearVelocity(-8,0);
-                break;
+                switch(id){
+                    case 1:{
+                        this.texture = game.getManager().get("knight_idle_anim_f0R.png");
+                        break;
+                    }
+                    case 2:{
+                        this.texture = game.getManager().get("elf_f_hit_anim_f0R.png");
+                        break;
+                    }
+                    case 3:{
+                        this.texture = game.getManager().get("wizzard_f_hit_anim_f0R.png");
+                        break;
+                    }
+                }
             }
         }
     }

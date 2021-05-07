@@ -28,8 +28,11 @@ public class MainGame extends Game {
 	public void create() {
 		manager = new AssetManager();
 		manager.load("knight_idle_anim_f0.png", Texture.class);
+		manager.load("knight_idle_anim_f0R.png", Texture.class);
 		manager.load("elf_f_hit_anim_f0.png", Texture.class);
+		manager.load("elf_f_hit_anim_f0R.png", Texture.class);
 		manager.load("wizzard_f_hit_anim_f0.png", Texture.class);
+		manager.load("wizzard_f_hit_anim_f0R.png", Texture.class);
 		manager.load("slime_idle_anim_f0.png", Texture.class);
 		manager.load("goblin_idle_anim_f0.png", Texture.class);
 		manager.load("medic.png", Texture.class);
@@ -39,8 +42,10 @@ public class MainGame extends Game {
 		manager.load("wall_1.png", Texture.class);
 		manager.load("gameover.png", Texture.class);
 		manager.load("stair_nextlevel.png", Texture.class);
+		manager.load("key_silver.png", Texture.class);
 
 		manager.load("bubble2.ogg", Sound.class);
+		manager.load("metal-small3.ogg", Sound.class);
 		manager.load("coin.ogg", Sound.class);
 		manager.load("giant5.ogg", Sound.class);
 		manager.load("magic.ogg", Sound.class);
