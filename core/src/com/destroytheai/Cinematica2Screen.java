@@ -19,6 +19,10 @@ public class Cinematica2Screen extends BaseScreen {
     private Skin skin;
     private TextButton menu;
 
+    /**
+     * En el constructor de esta clase se crea la pantalla entera y se da funcionalidad al botón que posee
+     * @param game
+     */
     public Cinematica2Screen(final MainGame game) {
         super(game);
 
@@ -32,6 +36,7 @@ public class Cinematica2Screen extends BaseScreen {
         menu.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                game.setGameScreen(new GameScreen(game, 1));
                 game.setScreen(game.menuScreen);
             }
         });
@@ -59,6 +64,9 @@ public class Cinematica2Screen extends BaseScreen {
     }
 
     @Override
+    /**
+     * Se encarga de dibujar la pantalla para hacerla visible
+     */
     public void render(float delta) {
         Gdx.gl.glClearColor(0.2784f, 0.2941f, 0.3059f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

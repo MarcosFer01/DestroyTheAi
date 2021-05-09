@@ -10,6 +10,13 @@ public class Habitaciones {
     private boolean jefe;
     private int numEn;
 
+    /**
+     * En el constructor de esta clase se asignan la posición y dimensiones de la habitación
+     * @param x
+     * @param y
+     * @param w
+     * @param h
+     */
     public Habitaciones(int x, int y, int w, int h){
         this.x=x;
         this.y=y;
@@ -17,6 +24,12 @@ public class Habitaciones {
         this.h=h;
     }
 
+    /**
+     * Este método comprueba que no haya habitaciones dentro de otras
+     * @param h1
+     * @param h2
+     * @return
+     */
     public boolean colisionan(Habitaciones h1, Habitaciones h2){
         if((h2.getX()>=h1.getX() && h2.getX()<=h1.getX()+h1.getW()) && (h2.getY()>=h1.getY() && h2.getY()<h1.getY()+h1.getH())){
             return true;

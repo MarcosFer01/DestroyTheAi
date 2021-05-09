@@ -87,6 +87,14 @@ public class PersonajeEntidad extends Actor {
         this.daño = daño;
     }
 
+    /**
+     * En el constructor de esta clase se crea el cuerpo del actor y se posiciona en el mapa, aparte, se le asigna una id de personaje y sus estadisticas en base a la id
+     * @param world
+     * @param texture
+     * @param position
+     * @param selecPer
+     * @param game
+     */
     public PersonajeEntidad(World world, Texture texture, Vector2 position, int selecPer, MainGame game){
         this.world=world;
         this.texture=texture;
@@ -112,6 +120,9 @@ public class PersonajeEntidad extends Actor {
     }
 
     @Override
+    /**
+     * Este método dibuja a la entidad donde corresponde con su textura
+     */
     public void draw(Batch batch, float parentAlpha) {
         setPosition((body.getPosition().x)*PIXELS_IN_METERS,
                     (body.getPosition().y)*PIXELS_IN_METERS);
@@ -119,6 +130,9 @@ public class PersonajeEntidad extends Actor {
     }
 
     @Override
+    /**
+     * Este método se encarga de controlar la actuación de la entidad, en este caso, controla la respuesta de los controles
+     */
     public void act(float delta) {
         if(!movimiento){
             body.setLinearVelocity(0,0);
@@ -126,6 +140,9 @@ public class PersonajeEntidad extends Actor {
         handleInput();
     }
 
+    /**
+     * Este método controla que el personaje se pueda mover en la posición que corresponda en base a los botones pulsados y las colisiones actuales
+     */
     public void handleInput(){
         if(controler.isUp() && colision==false){
             moverse(0);
@@ -149,6 +166,10 @@ public class PersonajeEntidad extends Actor {
         }
     }
 
+    /**
+     * Este método hace que el personaje se mueva en la posición indicada y cambia la textura del personaje para mirar a un lado u otro
+     * @param dir
+     */
     public void moverse(int dir) {
         switch(dir){
             case 0:{
@@ -225,11 +246,18 @@ public class PersonajeEntidad extends Actor {
         }
     }
 
+    /**
+     * EEste método elimina al actor del mundo
+     */
     public void detach(){
         body.destroyFixture(fixture);
         world.destroyBody(body);
     }
 
+    /**
+     * Este método resta vida de la entidad y controla cuando el actor muere
+     * @param daño
+     */
     public void recibirDaño(int daño){
         this.setVida(this.getVida()-daño);
         if (this.getVida()<=0){
@@ -237,11 +265,18 @@ public class PersonajeEntidad extends Actor {
         }
     }
 
+    /**
+     * Este método reestablece la vida del jugador y le resta 10 de oro
+     */
     public void curar(){
         this.setVida(this.getVidaMax());
         this.setOro(this.getOro()-10);
     }
 
+    /**
+     * Este método asigna las estadísticas a la entidad
+     * @param selecPer
+     */
     public void estadisticas(int selecPer){
         switch (selecPer){
             case 1:{

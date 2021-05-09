@@ -29,6 +29,10 @@ public class PersonajesScreen extends BaseScreen {
         this.selecPer = selecPer;
     }
 
+    /**
+     * En el constructor de esta clase se crea la pantalla entera y se da funcionalidad a los botones que posee
+     * @param game
+     */
     public PersonajesScreen(final MainGame game) {
         super(game);
         stage = new Stage(new FitViewport(640, 360));
@@ -110,6 +114,9 @@ public class PersonajesScreen extends BaseScreen {
     }
 
     @Override
+    /**
+     * Se encarga de dibujar la pantalla para hacerla visible
+     */
     public void render(float delta) {
         Gdx.gl.glClearColor(0.2784f, 0.2941f, 0.3059f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

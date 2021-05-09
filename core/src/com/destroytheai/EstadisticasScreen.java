@@ -61,9 +61,13 @@ public class EstadisticasScreen extends BaseScreen {
         this.curas = curas;
     }
 
+    /**
+     * En el constructor de esta clase se crea la pantalla entera y se da funcionalidad al botón que posee. Antes de mostrar los datos se cargan con el método introducir datos
+     * @param game
+     */
     public EstadisticasScreen(final MainGame game) {
         super(game);
-        System.out.println("Entrando estadisticas");
+
         introducirDatos();
 
         stage = new Stage(new FitViewport(640, 360));
@@ -106,6 +110,9 @@ public class EstadisticasScreen extends BaseScreen {
     }
 
     @Override
+    /**
+     * Se encarga de dibujar la pantalla para hacerla visible
+     */
     public void render(float delta) {
         Gdx.gl.glClearColor(0.2784f, 0.2941f, 0.3059f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -113,6 +120,9 @@ public class EstadisticasScreen extends BaseScreen {
         stage.draw();
     }
 
+    /**
+     * En este método se lee el documento con los datos de las estadísticas, y se guardan en las variable correspondientes
+     */
     public void introducirDatos(){
         try{
             BufferedReader miFichero = new BufferedReader(new FileReader("estadisticas.txt"));
@@ -133,6 +143,9 @@ public class EstadisticasScreen extends BaseScreen {
         }catch(Exception e){}
     }
 
+    /**
+     * Este método se encarga de sobreescribir en el documento los datos de las estadísticas
+     */
     public void sobreescribirDatos(){
         try{
             BufferedWriter miFichero = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("estadisitcas.txt")));
@@ -144,6 +157,9 @@ public class EstadisticasScreen extends BaseScreen {
         }
     }
 
+    /**
+     * Este método se encarga de mostrar los datos actualizados en la pantalla de estadísticas
+     */
     public void actualizarEstadisticas(){
         Estadisticas.setText("Pisos explorados: "+this.getPartJug() +
                 "\nPartidas completadas: "+this.getPartComp() +

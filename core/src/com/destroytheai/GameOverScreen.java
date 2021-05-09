@@ -1,5 +1,6 @@
 package com.destroytheai;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,6 +19,10 @@ public class GameOverScreen extends BaseScreen{
     private Image gameover;
     private TextButton menu;
 
+    /**
+     * En el constructor de esta clase se crea la pantalla entera y se da funcionalidad al botón que posee
+     * @param game
+     */
     public GameOverScreen(final MainGame game) {
         super(game);
 
@@ -26,9 +31,13 @@ public class GameOverScreen extends BaseScreen{
         gameover = new Image(new Texture("gameover.png"));
         menu = new TextButton("Menu principal", skin);
 
+        /*
+         * Cuando se pulsa el botón, se crea un nuevo piso para poder jugar una partida nueva si el jugador lo desea
+         */
         menu.addCaptureListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
+                game.setGameScreen(new GameScreen(game, 1));
                 game.setScreen(game.menuScreen);
             }
         });
@@ -57,6 +66,9 @@ public class GameOverScreen extends BaseScreen{
     }
 
     @Override
+    /**
+     * Se encarga de dibujar la pantalla para hacerla visible
+     */
     public void render(float delta) {
         Gdx.gl.glClearColor(0.2784f, 0.2941f, 0.3059f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

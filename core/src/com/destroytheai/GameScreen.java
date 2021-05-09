@@ -50,7 +50,11 @@ public class GameScreen extends BaseScreen {
         return personaje;
     }
 
-
+    /**
+     * Esta clase equivale a un piso del juego, y su constructor de encarga de crear e instanciar las demas clases necesarias para hacer que funcione
+     * @param game
+     * @param piso
+     */
     public GameScreen(final MainGame game, int piso) {
         super(game);
 
@@ -67,6 +71,10 @@ public class GameScreen extends BaseScreen {
         world = new World(new Vector2(0, 0), true);
         crearPiso();
         controler = new Controler(game);
+
+        /*
+        En la siguiente sección de código se manejan todas las colisiones del juego
+         */
         world.setContactListener(new ContactListener() {
 
             private boolean hayColision(Contact contact, Object userA, Object userB){
@@ -76,6 +84,9 @@ public class GameScreen extends BaseScreen {
 
             @Override
             public void beginContact(Contact contact) {
+                /*
+                 *Colisión entre jugador y suelos
+                 */
                 if(hayColision(contact, "player", "floor")){
                     game.estadisticasScreen.setPartJug(game.estadisticasScreen.getPartJug()+1);
                     stage.addAction(
@@ -91,6 +102,10 @@ public class GameScreen extends BaseScreen {
                             )
                     );
                 }
+
+                /*
+                Colisión entre jugador y NPCs
+                 */
                 if(hayColision(contact, "player", "medic")){
                     if (personaje.getOro()>10 && personaje.getVida()<personaje.getVidaMax()){
                         game.estadisticasScreen.setCuras(game.estadisticasScreen.getCuras()+1);
@@ -117,6 +132,9 @@ public class GameScreen extends BaseScreen {
                         );
                     }
                 }
+                /*
+                 * Colisión entre jugador y enemigos
+                 */
                 if(hayColision(contact, "player", "enemy")){
                     if (contact.getFixtureB().getUserData().equals("enemy")){
                         Vector2 pos1 = contact.getFixtureB().getBody().getPosition();
@@ -319,6 +337,9 @@ public class GameScreen extends BaseScreen {
     }
 
     @Override
+    /**
+     * Esta clase se encarga de recorrer el mapa y cargar y mostrar por pantalla todas las entidades y elementos que contiene el mapa
+     */
     public void show() {
         Gdx.input.setInputProcessor(stage);
         Texture cabTexture = game.getManager().get("knight_idle_anim_f0.png");
@@ -433,6 +454,9 @@ public class GameScreen extends BaseScreen {
     }
 
     @Override
+    /**
+     * Esta clase elimina las entidades una vez que no se usan para ahorrar recursos
+     */
     public void hide() {
         personaje.detach();
         personaje.remove();
@@ -453,6 +477,9 @@ public class GameScreen extends BaseScreen {
     }
 
     @Override
+    /**
+     * Este método se ejecuta varias veces por segundo y es donde se maneja la cámara del juego y el escenario que ve el jugador
+     */
     public void render(float delta) {
         Gdx.gl.glClearColor(0.2784f, 0.2941f, 0.3059f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -466,11 +493,17 @@ public class GameScreen extends BaseScreen {
     }
 
     @Override
+    /**
+     * Este método elimina se encarga de eliminar el mundo y la escena
+     */
     public void dispose() {
         stage.dispose();
         world.dispose();
     }
 
+    /**
+     * Este método crea una matriz rellena de 0 sobre la que se dibujaran las habitaciones y pasillos del piso
+     */
     public void crearMapa(){
         for(int i=0;i<TAMAÑO_MAPA;i++){
             ArrayList<Integer> fila = new ArrayList<Integer>();
@@ -481,6 +514,10 @@ public class GameScreen extends BaseScreen {
         }
     }
 
+    /**
+     * Este método se encarga de rellenar un ArrayList con habitaciones situadas aleatoriamente por el mapa. Así mismo, se añaden propiedades como el numero de enemigos, si la habitación contiene el jefe,
+     * las escaleras para cambiar de piso, o el inicio del nivel
+     */
     public void crearHabitaciones(){
         int cont=1;
         while(habitaciones.size()<=9){
@@ -527,6 +564,9 @@ public class GameScreen extends BaseScreen {
         }
     }
 
+    /**
+     * Este método recorre el array mapa y cambia los 0 por el numero que corresponda a las paredes y suelos de las habitaciones.
+     */
     public void dibujarHabitaciones(){
         for(int i=0; i<habitaciones.size();i++){
             Habitaciones hab = habitaciones.get(i);
@@ -550,6 +590,9 @@ public class GameScreen extends BaseScreen {
         }
     }
 
+    /**
+     * Este método se encarga de unir los centros de dos habitaciones, cambiando en el arrayList mapa los numeros que equivaldrían a los pasillos y a las paredes que los rodean
+     */
     public void dibujarPasillos(){
         for(int i = 0; i<(habitaciones.size()-1);i++){
             int[] centro1 = {(habitaciones.get(i).getX()+habitaciones.get(i).getW()/2), (habitaciones.get(i).getY()+habitaciones.get(i).getH()/2)};
@@ -624,6 +667,9 @@ public class GameScreen extends BaseScreen {
         }
     }
 
+    /**
+     * Este método cambia los valores de las habitaciones del mapa para rellenarlas, dependendiendo del piso y de la habitación, de las entidades que necesite.
+     */
     public void rellenarHabitaciones(){
         for(int i=0; i<habitaciones.size();i++){
             Habitaciones hab = habitaciones.get(i);
@@ -668,6 +714,9 @@ public class GameScreen extends BaseScreen {
         }
     }
 
+    /**
+     * Este método junta todos los métodos necesarios para crear un piso en su totalidad
+     */
     public void crearPiso(){
         crearMapa();
         crearHabitaciones();

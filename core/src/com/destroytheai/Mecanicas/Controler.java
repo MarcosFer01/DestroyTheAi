@@ -31,13 +31,40 @@ public class Controler {
     Label vida;
     Label oro;
     Label medico;
-    Label llave;
     private PersonajeEntidad personaje;
 
     public void setPersonaje(PersonajeEntidad personaje) {
         this.personaje = personaje;
     }
+    public boolean isUp() {
+        return up;
+    }
+    public void setUp(boolean up) {
+        this.up = up;
+    }
+    public boolean isDown() {
+        return down;
+    }
+    public void setDown(boolean down) {
+        this.down = down;
+    }
+    public boolean isLeft() {
+        return left;
+    }
+    public void setLeft(boolean left) {
+        this.left = left;
+    }
+    public boolean isRight() {
+        return right;
+    }
+    public void setRight(boolean right) {
+        this.right = right;
+    }
 
+    /**
+     * En el contructor de esta clase se crean los Label e imágenes necesarios para la pantalla, aparte, se les da funcionalidad a las imágenes de los controles.
+     * @param game
+     */
     public Controler(final MainGame game){
         viewport = new FitViewport(640, 360);
         stage = new Stage(viewport);
@@ -58,7 +85,8 @@ public class Controler {
         opciones.addListener(new InputListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                Gdx.app.exit();
+                game.setGameScreen(new GameScreen(game, 1));
+                game.setScreen(game.gameScreen);
                 return true;
             }
         });
@@ -137,10 +165,16 @@ public class Controler {
         stage.addActor(medico);
     }
 
+    /**
+     * Este método se encarga de dibujar los controles
+     */
     public void draw(){
         stage.draw();
     }
 
+    /**
+     * Este método actualiza los label para mostrar la información del personaje, aparte, avisa al jugador cuando debería curarse
+     */
     public void setTextoPer(){
         if (personaje.getVida()<5){
             medico.setVisible(true);
@@ -153,34 +187,5 @@ public class Controler {
             vida.setText("Vida: "+personaje.getVida()+"/"+personaje.getVidaMax());
         }
         oro.setText("Oro: "+personaje.getOro());
-    }
-
-    public boolean isUp() {
-        return up;
-    }
-    public void setUp(boolean up) {
-        this.up = up;
-    }
-    public boolean isDown() {
-        return down;
-    }
-    public void setDown(boolean down) {
-        this.down = down;
-    }
-    public boolean isLeft() {
-        return left;
-    }
-    public void setLeft(boolean left) {
-        this.left = left;
-    }
-    public boolean isRight() {
-        return right;
-    }
-    public void setRight(boolean right) {
-        this.right = right;
-    }
-
-    public void resize(int width, int height){
-        viewport.update(width, height);
     }
 }

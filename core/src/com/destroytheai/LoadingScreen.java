@@ -14,6 +14,10 @@ public class LoadingScreen extends BaseScreen{
     private Label loading;
     private Label porcentage;
 
+    /**
+     * En el constructor de esta clase se crea la pantalla entera
+     * @param game
+     */
     public LoadingScreen(MainGame game) {
         super(game);
 
@@ -28,6 +32,9 @@ public class LoadingScreen extends BaseScreen{
     }
 
     @Override
+    /**
+     * Se encarga de dibujar la pantalla para hacerla visible y a su vez, cambia al menú principal una vez que detecta que la app ha cargado todos los elementos necesarios
+     */
     public void render(float delta) {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

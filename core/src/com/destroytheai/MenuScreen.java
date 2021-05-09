@@ -28,6 +28,10 @@ public class MenuScreen extends BaseScreen {
         this.music = music;
     }
 
+    /**
+     * En el constructor de esta clase se crea la pantalla entera y se da funcionalidad a los botones que posee
+     * @param game
+     */
     public MenuScreen(final MainGame game) {
         super(game);
         System.out.println(game.estadisticasScreen.getEneM());
@@ -64,6 +68,9 @@ public class MenuScreen extends BaseScreen {
     }
 
     @Override
+    /**
+     * Este método se ejecuta cuando se muestra la pantalla y se encarga de controlar la música
+     */
     public void show() {
         Gdx.input.setInputProcessor(stage);
         if(music){
@@ -86,6 +93,9 @@ public class MenuScreen extends BaseScreen {
     }
 
     @Override
+    /**
+     * Se encarga de dibujar la pantalla para hacerla visible
+     */
     public void render(float delta) {
         Gdx.gl.glClearColor(0.2784f, 0.2941f, 0.3059f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

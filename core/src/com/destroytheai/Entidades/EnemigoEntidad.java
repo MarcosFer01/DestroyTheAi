@@ -70,6 +70,13 @@ public class EnemigoEntidad extends Actor {
         this.vivo = vivo;
     }
 
+    /**
+     * En el constructor de esta clase se crea el cuerpo del actor y se posiciona en el mapa, aparte, se indica que tipo de enemigo es y se le asignan sus estadísticas necesarias
+     * @param world
+     * @param texture
+     * @param position
+     * @param selecEne
+     */
     public EnemigoEntidad(World world, Texture texture, Vector2 position, int selecEne){
         this.world=world;
         this.texture=texture;
@@ -106,6 +113,9 @@ public class EnemigoEntidad extends Actor {
     }
 
     @Override
+    /**
+     * Este método dibuja a la entidad donde corresponde con su textura
+     */
     public void draw(Batch batch, float parentAlpha) {
         setPosition((body.getPosition().x)*PIXELS_IN_METERS,
                     (body.getPosition().y)*PIXELS_IN_METERS);
@@ -113,17 +123,27 @@ public class EnemigoEntidad extends Actor {
     }
 
     @Override
+    /**
+     * En este método se controla la actuación de la entidad, en este caso, se le impide rebotar por el mapa cuando entra en contacto con otras entidades
+     */
     public void act(float delta) {
         if(!movimiento){
             body.setLinearVelocity(0,0);
         }
     }
 
+    /**
+     * Este método elimina al actor del mundo
+     */
     public void detach(){
         body.destroyFixture(fixture);
         world.destroyBody(body);
     }
 
+    /**
+     * Este método resta vida de la entidad y controla cuando el actor muere
+     * @param daño
+     */
     public void recibirDaño(int daño){
         this.setVida(this.getVida()-daño);
         if (this.getVida()<=0){
@@ -131,6 +151,10 @@ public class EnemigoEntidad extends Actor {
         }
     }
 
+    /**
+     * Este método asigna las estadísticas a la entidad
+     * @param selecEne
+     */
     public void estadisticas(int selecEne){
         switch (selecEne){
             case 1:{

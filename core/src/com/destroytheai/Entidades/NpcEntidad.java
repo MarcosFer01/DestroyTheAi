@@ -24,6 +24,12 @@ public class NpcEntidad extends Actor {
     private Body body;
     private Fixture fixture;
 
+    /**
+     * En el constructor de esta clase se crea el cuerpo del actor y se posiciona en el mapa.
+     * @param world
+     * @param texture
+     * @param position
+     */
     public NpcEntidad(World world, Texture texture, Vector2 position){
         this.world=world;
         this.texture=texture;
@@ -43,6 +49,9 @@ public class NpcEntidad extends Actor {
     }
 
     @Override
+    /**
+     * Este método dibuja a la entidad donde corresponde con su textura
+     */
     public void draw(Batch batch, float parentAlpha) {
         setPosition((body.getPosition().x)*PIXELS_IN_METERS,
                 (body.getPosition().y)*PIXELS_IN_METERS);
@@ -54,6 +63,9 @@ public class NpcEntidad extends Actor {
 
     }
 
+    /**
+     * Este método elimina al actor del mundo
+     */
     public void detach(){
         body.destroyFixture(fixture);
         world.destroyBody(body);

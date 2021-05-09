@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.Texture;
 public class MainGame extends Game {
 
 	private AssetManager manager;
-
 	public GameScreen gameScreen;
 	public GameOverScreen gameOverScreen;
 	public MenuScreen menuScreen;
@@ -23,8 +22,17 @@ public class MainGame extends Game {
 	public AssetManager getManager() {
 		return manager;
 	}
+	public GameScreen getGameScreen() {
+		return gameScreen;
+	}
+	public void setGameScreen(GameScreen gameScreen) {
+		this.gameScreen = gameScreen;
+	}
 
 	@Override
+	/**
+	 * En el creador del juego,se muestra la pantalla de carga mientras se cargan todas las texturas y sonidos necesarios
+	 */
 	public void create() {
 		manager = new AssetManager();
 		manager.load("knight_idle_anim_f0.png", Texture.class);
@@ -58,6 +66,9 @@ public class MainGame extends Game {
 		setScreen(loadingScreen);
 	}
 
+	/**
+	 * Este método se encarga de crear todas las pantallas necesarias para el juego y mostrar la del menú principal
+	 */
 	public void cargaCompleta(){
 		personajesScreen = new PersonajesScreen(this);
 		gameScreen = new GameScreen(this, 1);
