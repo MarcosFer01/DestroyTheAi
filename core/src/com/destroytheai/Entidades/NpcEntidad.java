@@ -58,11 +58,6 @@ public class NpcEntidad extends Actor {
         batch.draw(texture, getX(), getY(), getWidth(), getHeight());
     }
 
-    @Override
-    public void act(float delta) {
-
-    }
-
     /**
      * Este método elimina al actor del mundo
      */

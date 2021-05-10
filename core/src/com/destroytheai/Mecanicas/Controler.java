@@ -26,7 +26,6 @@ import com.destroytheai.MainGame;
 public class Controler {
     Viewport viewport;
     Stage stage;
-    private Skin skin;
     boolean up, down, left, right;
     Label vida;
     Label oro;
@@ -69,7 +68,6 @@ public class Controler {
         viewport = new FitViewport(640, 360);
         stage = new Stage(viewport);
         Gdx.input.setInputProcessor(stage);
-        skin = new Skin(Gdx.files.internal("skin/uiskin.json"));
 
         vida = new Label("Vida: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
         oro = new Label("Oro: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));

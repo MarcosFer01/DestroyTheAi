@@ -23,7 +23,7 @@ public class EstadisticasScreen extends BaseScreen {
     private Stage stage;
     private Skin skin;
     private TextButton salir;
-    Label Estadisticas;
+    public Label Estadisticas;
     private int partJug;
     private int partComp;
     private int eneM;
